@@ -1,7 +1,7 @@
 # mini-C-Interpreter
 Developed using C++ by team 端茶倒水 in BIT
 
-## 本周任务 *Edit September 1st*
+## 本周任务 *September 1st-September 5th*
 + 分组码代码（详细分工见下面）
 + 每组创建测试用例2个，创建格式为\*.test的文件
 + 商量接口
