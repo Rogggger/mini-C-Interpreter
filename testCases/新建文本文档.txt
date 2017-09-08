@@ -1,0 +1,609 @@
+//输入输出测试用例
+
+//输入
+//case 0
+int main()      /*输入包含提示信息*/
+{
+    int a;
+    in "Please input a integer:" a;
+    out a;
+}
+//case 1
+int main()      /*分别输入整型，实型，字符串型作为a*/
+{
+    int a;
+    in a;
+    out a;
+}
+
+//case 2
+int main()      /*分别输入整型，实型，字符串型作为a*/
+{
+    real a;
+    in a;
+    out a;
+}
+
+//case 3
+int main()      /*分别输入整型，实型，字符串型作为（输入空串）a*/
+{
+    string a;
+    in a;
+    out a;
+}
+
+//case 4
+int main()      /*无输入无初始化情况下输出情况*/
+{
+    int a;
+    out a;
+}
+
+//case 5
+int main()
+{
+    real a;
+    out a;
+}
+
+//case 6
+int main()
+{
+    string a;
+    out a;
+}
+
+//case 7
+int main()      /*使用未定义变量*/
+{
+    a = 10;
+    out a;
+}
+
+//主函数格式
+//case 8
+main()          /*主函数未定义函数类型*/
+{
+    out "It's okay!";
+}
+
+//case 9
+void main()     /*主函数未定义为整型*/
+{
+    out "It's okay!";
+}
+
+//输出
+//case 10
+int main()      /*按照输出规则输出*/
+{
+    int a;
+    a = 3;
+    out a;
+    out a, "* ";
+    out "a = ", a;
+    real b;
+    b = 1.5;
+    out b;
+    string c;
+    c = "Hello World";
+    out c;
+}
+
+//case 11
+int main()      /*按照输出规则带表达式输出*/
+{
+    int a = 2;
+    out a*a;
+    out "\n";
+    out a*a, "* ";
+    out a * a, "* ";//空格对表达式的影响
+    out "a = ", a*a;
+}
+
+//case 12
+int main()      /*输出数量不为整数*/
+{
+    real a = 1.5;
+    out a, "*";
+    out a;
+    string b = "hello";
+    out b, "hello";
+}
+
+//case 13
+int main()      /*输出格式不符合规定*/
+{
+    int a = 3;
+    out a, "*"a;
+}
+
+//case 14
+int main()      /*输出非英文*/
+{
+    out "输出中文\n";
+    int a = 2;
+    out a, "こんにちは\n";
+}
+
+//表达式
+//case 15
+int main()      /*乘法是否能够正确运算*/
+{
+    int a;
+    a = 5;
+    a = a*a;
+    out a;
+}
+
+//case 16
+int main()      /*除法是否能正确运算*/
+{
+    int a;
+    a = 5;
+    a = a / 5;
+    out a;
+    out "\n";
+    real b;
+    b = 1.25;
+    out b/5;
+}
+
+//case 17
+int main()      /*除0运算*/
+{
+    int a,b;
+    a = 5;
+    b = 0;
+    out a / b;
+}
+
+//case 18
+int main()      /*模运算*/
+{
+    int a,b;
+    a = 5;
+    b = 2;
+    out a % b;
+}
+
+//case 19
+int main()      /*对0取模，非法*/
+{
+    int a,b;
+    a = 5;
+    b = 0;
+    out a % b;
+}
+
+//case 20
+int main()      /*小数取模*/
+{
+    real a;
+    int b;
+    a = 1.5;
+    b = 2;
+    out a % b;
+}
+
+//case 21
+int main()      /*对小数取模*/
+{
+    int a;
+    real b;
+    a = 2;
+    b = 1.5;;
+    out a % b;
+}
+
+//case 22
+int main()      /*对数取非*/
+{
+    int a;
+    a = 2;
+    out !a;
+    int b = 0;
+    out !b;
+}
+
+//case 23
+int main()      /*检查括号是否能被正确读入，优先级是否能正确判断*/
+{
+    int a;
+    a = 15;
+    a = a + a * a;
+    out a;
+    out "\n";
+    a = 15;
+    a = ( a + a ) * a;
+    out a;
+    out "\n";
+}
+
+//case 24
+int main()      /*多余括号是否影响运算*/
+{
+    int a;
+    a = 5;
+    a = ((((a+a))))*a;
+    out a;
+}
+
+//case 25
+int main()      /*不符合表达式形式*/
+{
+    int a;
+    a = 5;
+    a = a(a+a);
+    out a;
+}
+
+//case 26
+int main()      /*括号未匹配*/
+{
+    int a;
+    a = 5;
+    a = a*(a+(a);
+    out a;
+}
+
+//case 27
+int main()      /*输出普通表达式值*/
+{
+    int a = 5,b = 3,c = 2;
+    real d = 1.3;
+    out d*(a%b)*c;
+}
+
+//case 28
+int main()      /*多重符号0*/
+{
+    int a,b;
+    a = 5;
+    b = 3;
+    int c;
+    c = a-(-(-b));
+    out c;
+}
+
+//case 29
+int main()      /*测试int型数据范围*/
+{
+    int a = 32767,b = 5;
+    out a+b;
+}
+
+//case 30
+int main()      /*连续赋值*/
+{
+    int a,b;
+    a = b = 5;
+    out a;
+    out "\n";
+    out b;
+}
+
+//case 31
+int main()      /*正负 */
+{
+    int a = 5,b = -3;
+    a = -a;
+    b = b;
+    out a;
+    out "\n";
+    out b;
+}
+
+//case 31
+int main()      /*大于号比较*/
+{
+    int a = 5;
+    real b = 3.5;
+    out a>b;
+    int c = 5;
+    out "\n";
+    out a>c;
+}
+
+//case 32
+int main()      /*小于号比较*/
+{
+    real a = 3.2,b = 2.8;
+    out a<b;
+}
+
+//case 33
+int main()      /*等于*/
+{
+    real a = 3.2,b = 3.2;
+    out a == b;
+    out "\n";
+    int c = 5,d = 5;
+    out c == d;
+}
+
+//case 34
+int main()      /*大于等于*/
+{
+    int a = 3,b = 3;
+    out a >= b;
+    out "\n";
+    real c = 3.2,d = 3.2;
+    out c >= d;
+}
+
+//case 35
+int main()      /*小于等于*/
+{
+    int a = 3,b = 3;
+    out a <= b;
+    out "\n";
+    real c = 3.2,d = 4;
+    out c <= d;
+}
+
+//case 36
+int main()      /*不等于*/
+{
+    int a = 5;
+    int b = 2;
+    out a <> b;
+    b = 5;
+    out "\n";
+    out a <> b;
+}
+
+//case 37
+int main()      /*加法数据类型不为指定类型*/
+{
+    string a,b;
+    a = "hello";
+    b = "world";
+    out a+b;
+}
+
+//case 38
+int main()      /*减法数据类型不为指定类型*/
+{
+    string a,b;
+    a = "a";
+    b = "b";
+    out a-b;
+}
+
+//case 39
+int main()      /*乘法出现string类型变量*/
+{
+    string a;
+    int b;
+    a = "a";
+    b = 3;
+    out b*a;
+}
+
+//case 40
+int main()      /*比较字符串大小*/
+{
+    string a,b;
+    a = "hello";
+    b = "world";
+    out a<b;
+}
+
+//case 41
+int main()      /*判断字符串相等*/
+{
+    string a,b;
+    a = "hello";
+    b = "hello";
+    out a==b;
+}
+
+//case 42
+int main()      /*字符串与数字相等*/
+{
+    string a;
+    int b;
+    a = "a";
+    b = 97;
+    out a==b;
+}
+
+//case 43
+int main()      /*字符串不等*/
+{
+    string a,b;
+    a = "hello";
+    b = "world";
+    out a<>b;
+}
+
+//字符串
+//case 44
+int main()      /*转义字符\0是否有效*/
+{
+    string a;
+    a = "he\0llo"
+    out a;
+}
+
+//case 45
+int main()      /*转义字符\n*/
+{
+    string a;
+    a = "he\nllo";
+    out a;
+}
+
+//case 46
+int main()      /*打印\*/
+{
+    string a;
+    a = "\\n";
+    out a;
+}
+
+//case 47
+int main()      /*字符串连接*/
+{
+    string a,b;
+    a = "love";
+    b = "ly";
+    out a$b;
+}
+
+//case 48
+int main()      /*转义字符与普通串连接*/
+{
+    string a,b;
+    a = "\0";
+    b = "hello";
+    out a$b;
+}
+
+//case 49
+int main()
+{
+    string a;
+    a = "hello";
+    out #a;
+}
+
+//case 50
+int main()      /*非法连接字符串与整数*/
+{
+    string a;
+    int b;
+    a = "string";
+    b = 10;
+    out a$b;
+}
+
+//case 51
+int main()      /*删除的变量不为字符串型*/
+{
+    int a;
+    a = 5;
+    out #a;
+}
+
+//case 52
+int main()      /*从空串中删除字符*/
+{
+    string a;
+    a = "";
+    out #a;
+}
+
+//case 53
+int main()      /*单行注释*/
+{
+    string a;
+    a = "hello";
+    //out a;
+    out "No out\n";
+}
+
+//case 54
+int main()      /*行末缺少分号*/
+{
+    string a;
+    a = "hello"
+    out a;
+}
+
+//选择结构
+//case 55
+int main()      /*简单选择结构*/
+{
+    int a;
+    a = 5;
+    if a
+        out "Approved";
+    else
+        out "Not approved";
+}
+
+//case 56
+int main()      /*简单选择结构，判断条件不为整数*/
+{
+    real a;
+    a = 1.25;
+    if a
+        out "Approved";
+    else
+        out "Not approved";
+}
+
+//case 57
+int main()      /*简单选择结构，判断条件为字符串*/
+{
+    string a;
+    a = "a";
+    if a
+        out "Not approved";
+    else
+        out "Approved";
+}
+
+//case 58
+int main()      /*选择结构的判断条件为赋值语句*/
+{
+    int a,b;
+    a = 5;
+    if b = a
+        out b;
+    else
+        out "No?";
+}
+
+//case 59
+int main()      /*多层选择*/
+{
+    int a,b,c;
+    real d,e,f;
+    in a;
+    in b;
+    in c;
+    in d;
+    in e;
+    in f;
+    if a<b
+    {
+        if b<c
+        {
+            if d<e
+                out f;
+            else
+                out -f;
+        }
+        else
+        {
+            if d<f
+                out e;
+            else
+                out -e;
+        }
+    }
+    else
+    {
+        if(b<c)
+        {
+            out "fin.\n";
+        }
+        else
+        {
+            if(e<f)
+                out d;
+            else
+                out -d;
+        }
+    }
+}
+
+//逻辑表达式
+//循环结构
+//函数调用
+//变量的域
+
+//综合
