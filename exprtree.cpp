@@ -12,7 +12,7 @@ bool float_eq(double id, double num)
     return true;
   return false;
 }
-  
+
 
 class Expression
 {

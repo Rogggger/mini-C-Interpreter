@@ -29,13 +29,14 @@ void yyerror(const char *msg);
 void unrecognized_char(char c);
 void unterminate_string();
 typedef union YYSTYPE
-  {
+ {
     Expressions* expressions;
-    Expression* expression;
-	char		name[32];
-	double 		num;
-	char       str[32];
-  }YYSTYPE;
+    Expression*  expression;
+    string* 	 str;
+    double       num;
+    PHint        phint;
+    Actuals*     actuals;
+ }YYSTYPE;
 
   extern YYSTYPE yylval;
 %}
@@ -58,7 +59,8 @@ STRING              (\042[^\042\n]*\042)
 
 {OPERATOR}          { return yytext[0]; }
 "int"               { return T_Int; }
-"real"			       	{ return T_Real; }
+"real"			    { return T_Real; }
+
 "void"              { return T_Void; }
 "return"            { return T_Return; }
 "print"             { return T_Print; }
@@ -77,8 +79,15 @@ STRING              (\042[^\042\n]*\042)
 
 {INTEGER}           { yylval.num = atof(yytext); return T_IntConstant; }
 {REAL}				{ yylval.num = atof(yytext); return T_RealConstant; }
-{STRING}            { strcpy(yylval.str, yytext); return T_StringConstant; }
-{IDENTIFIER}        { strcpy(yylval.name, yytext); return T_Identifier; }
+{STRING}            { 
+						yylval.str = new string(yytext); 
+						yylval.str = yylval.str.substr(2,yylval.str.length()-2);
+						return T_StringConstant; 
+					}
+{IDENTIFIER}        { 
+						yylval.str = new string(yytext); 
+						return T_Identifier; 
+					}
 
 {UNTERM_STRING}     { unterminate_string(); }
 .                   { unrecognized_char(yytext[0]); }
