@@ -1,0 +1,9 @@
+int main()      /*按照输出规则带表达式输出*/
+{
+    int a = 2;
+    out a*a;
+    out "\n";
+    out a*a, "* ";
+    out a * a, "* ";//空格对表达式的影响
+    out "a = ", a*a;
+}

@@ -1,0 +1,24 @@
+int mul(int a,int b)        //¸´ÔÓµ÷ÓÃ
+{
+    return a*b;
+}
+
+int add(int a,int b)
+{
+    return mul(2,a)+mul(3,b);
+}
+
+int mi(int a,int b)
+{
+    return add(100,a)-add(2,b);
+}
+
+int div(int a,int b)
+{
+    return mi(100,a)/mi(20,b);
+}
+
+int main()
+{
+    out div(10,5);
+}

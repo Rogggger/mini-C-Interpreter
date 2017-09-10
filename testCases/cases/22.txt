@@ -1,0 +1,8 @@
+int main()      /*对数取非*/
+{
+    int a;
+    a = 2;
+    out !a;
+    int b = 0;
+    out !b;
+}

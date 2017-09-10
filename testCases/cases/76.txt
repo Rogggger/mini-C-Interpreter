@@ -1,0 +1,14 @@
+int cal(int a,int b)    /*重复定义相同函数*/
+{
+    return a+b;
+}
+
+int cal(int a,int b)
+{
+    return a+b;
+}
+
+int main()
+{
+    out cal(5,3);
+}

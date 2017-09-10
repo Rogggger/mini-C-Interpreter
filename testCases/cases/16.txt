@@ -1,0 +1,11 @@
+int main()      /*除法是否能正确运算*/
+{
+    int a;
+    a = 5;
+    a = a / 5;
+    out a;
+    out "\n";
+    real b;
+    b = 1.25;
+    out b/5;
+}

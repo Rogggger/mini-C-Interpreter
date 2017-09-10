@@ -1,0 +1,240 @@
+测试用例1
+//输出三角形
+int main()
+{
+	int i=0,j=0,n=0; //定义三角形的大小；
+	in n;
+	while i<n
+	{
+		j=0;
+		while j<n-1-i
+		{
+			out " ";
+			j++;
+		}
+		j=0;
+		while j<2*i-1
+		{
+			out "*";
+			j++;
+		}
+		out "\n";
+		i++;
+	}
+	return 0;
+}
+
+测试用例2
+//比较两实型数大小
+real cmp(real s1,real s2)
+{
+	if s1>s2
+        {
+          return s1;
+         } 
+	else
+        {
+           return s2;
+         }
+}
+int main()
+{
+	real m,n,max;
+	in m;
+	in n;
+	max= cmp(m,n);
+	out max;
+}
+
+测试用例3
+//实型数的四则运算 
+int main()
+{
+	int a,b,final;
+	in a;
+	in b;
+	final=a+b;  //加法； 
+	out a "+" b "=" final;
+	final= a*b; //乘法；
+	out a "*" b "=" final; 
+	final= a-b; //减法；
+	out a "-" b "=" final;
+	final= a/b; //除法；
+	out a "/" b "=" final;
+	final= a%b; //取余；
+	out a "%" b "=" final;
+}
+
+测试用例4
+//实现串的操作 
+int main()
+{
+	string str1,str2,str3;
+	in str1;
+	in str2;
+	str3=str1$str2;
+	out str3;
+	str3=str1#a;
+	out str1;
+}
+
+测试用例5
+//查漏补缺 
+int main()
+{
+	//输出； 
+	out"start\n";
+	out 10,"final\n"; 
+	int n;
+	in n;
+	out n,"*";
+	//判断嵌套；
+	int k;
+        k=10;
+	if k>1&&k<100
+	{
+		if k==10
+		{
+			out "嵌套成功\n";
+		}
+		else
+		{
+			out "嵌套失败\n";
+		}
+	} 
+}
+
+测试用例6
+//输出数字正方形
+int main()
+{
+	int n;
+	in n; 
+	int num,i,j,k;
+	num=1;
+	i=0;
+	j=0;
+	while i<n
+	{
+		k=i+1;
+		while j<n-i
+		{
+			out k;
+			k=k+1;
+                        j=j+1;
+		}
+		k=k-1;
+                j=n-i;
+		while j<n
+		{
+			k=k-1;
+			out k;
+                        j=j+1;
+		}
+		out"\n";
+                i=i+1;
+	}
+	
+} 
+
+测试用例7
+//递归阶乘
+int fac(int n)
+{
+    int num=n;
+	n=n-1;
+	if n==0
+	{
+		return num;
+	}
+	else
+	{
+		num= num*fac(n);
+	}
+}
+int main()
+{
+	int final;
+	int n;
+	in n;
+	final=fac(n);
+	out final;
+}
+
+测试用例8
+//循环阶乘
+int main()
+{
+	int i;
+	int final;
+	int n;
+	i=1;
+	in n;
+	while i<=n
+	{
+		final=final*i;
+		i=i+1;
+	}
+	out final;
+}
+
+测试用例9
+//输出数字三角形
+int main()
+{
+	int i,j,k;
+	int n,num;
+	num=1;
+	i=0;
+	j=0;
+	k=0;
+	in n;
+	while i<n
+	{
+		while j<n-i-1
+		{
+			out " ";
+			j=j+1;
+		}
+		while k<=i
+		{
+			out num;
+			num=num+1;
+			k=k+1;
+		}
+		k=0;
+		num--;
+		while k<i
+		{
+			num--;
+			out num;
+			k++;
+		}
+		out "\n";
+		i++;
+		j=0;
+		k=0;
+		num=1;
+	}
+}
+
+测试用例10
+//加法
+int main()
+{
+	int n;
+	in n;
+	int i;
+	i=1;
+	int final;
+	final=0;
+	while i<=n
+	{
+		final=final+i;
+		i++;
+	}
+	out final;
+}
+
+
+

@@ -1,0 +1,8 @@
+int main()      /*乘法出现string类型变量*/
+{
+    string a;
+    int b;
+    a = "a";
+    b = 3;
+    out b*a;
+}

@@ -1,0 +1,7 @@
+int main()      /*ÅÐ¶Ï×Ö·û´®ÏàµÈ*/
+{
+    string a,b;
+    a = "hello";
+    b = "hello";
+    out a==b;
+}

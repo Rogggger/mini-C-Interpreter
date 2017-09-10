@@ -1,0 +1,8 @@
+int main()      /*Á¬Ğø¸³Öµ*/
+{
+    int a,b;
+    a = b = 5;
+    out a;
+    out "\n";
+    out b;
+}

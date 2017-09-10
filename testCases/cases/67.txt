@@ -1,0 +1,10 @@
+int cal(int a)      /*ÆÕÍ¨µ÷ÓÃ*/
+{
+    return a+a;
+}
+int main()
+{
+    int b;
+    b = 5;
+    out cal(b);
+}

@@ -1,0 +1,8 @@
+int main()      /*非法连接字符串与整数*/
+{
+    string a;
+    int b;
+    a = "string";
+    b = 10;
+    out a$b;
+}

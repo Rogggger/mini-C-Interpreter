@@ -1,0 +1,15 @@
+real cal(int a,int b) //²»ÄÜÖØÔØ
+{
+    return a+b;
+}
+int cal(int a,int b)
+{
+    return a+b;
+}
+int main()
+{
+    int a,b;
+    in a;
+    in b;
+    out cal(a,b);
+}

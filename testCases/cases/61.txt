@@ -1,0 +1,15 @@
+int main()      /*ÆÕÍ¨ÔËĞĞ²âÊÔ*/
+{
+    int a,b;
+    a = 0;
+    b = 5;
+    out a||b;
+    out "\n";
+    out a&&b;
+    out "\n";
+    a = 0;
+    b = 0;
+    out a||b;
+    out "\n";
+    out a&&b;
+}

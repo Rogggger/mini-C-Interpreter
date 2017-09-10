@@ -1,0 +1,6 @@
+int main()      /*´òÓ¡\*/
+{
+    string a;
+    a = "\\n";
+    out a;
+}

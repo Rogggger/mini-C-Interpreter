@@ -1,0 +1,22 @@
+int cal(int a,int b)
+{
+    return a-b;
+}
+
+real cal(int a,real b)
+{
+    return a-b;
+}
+
+int main()
+{
+    int a,b;
+    real c;
+    in a;
+    in b;
+    in c;
+    int d = cal(a,b);
+    real e = cal(a,c);
+    out cal(d,e);
+    out cal(e,d);//´íµÄ
+}

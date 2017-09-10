@@ -1,0 +1,12 @@
+int a;              //全局变量的
+
+void cal()
+{
+    a = a+a;
+}
+
+int main()
+{
+    a = 10;
+    out a;
+}

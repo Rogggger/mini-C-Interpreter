@@ -1,0 +1,5 @@
+int main()
+{
+    real a;
+    out a;
+}

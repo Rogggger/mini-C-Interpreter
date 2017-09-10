@@ -1,0 +1,9 @@
+int main()      /*²»µÈÓÚ*/
+{
+    int a = 5;
+    int b = 2;
+    out a <> b;
+    b = 5;
+    out "\n";
+    out a <> b;
+}

@@ -1,0 +1,15 @@
+//Ñ­»·½×³Ë
+int main()
+{
+	int i;
+	int final;
+	int n;
+	i=1;
+	in n;
+	while i<=n
+	{
+		final=final*i;
+		i=i+1;
+	}
+	out final;
+}

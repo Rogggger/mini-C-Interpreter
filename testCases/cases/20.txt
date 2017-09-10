@@ -1,0 +1,8 @@
+int main()      /*小数取模*/
+{
+    real a;
+    int b;
+    a = 1.5;
+    b = 2;
+    out a % b;
+}

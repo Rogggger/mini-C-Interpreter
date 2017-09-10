@@ -1,0 +1,6 @@
+int main()      /*输出普通表达式值*/
+{
+    int a = 5,b = 3,c = 2;
+    real d = 1.3;
+    out d*(a%b)*c;
+}

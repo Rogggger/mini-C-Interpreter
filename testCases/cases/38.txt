@@ -1,0 +1,7 @@
+int main()      /*加法数据类型不为指定类型*/
+{
+    string a,b;
+    a = "hello";
+    b = "world";
+    out a+b;
+}

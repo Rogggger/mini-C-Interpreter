@@ -1,0 +1,24 @@
+//²éÂ©²¹È± 
+int main()
+{
+	//Êä³ö£» 
+	out"start\n";
+	out 10,"final\n"; 
+	int n;
+	in n;
+	out n,"*";
+	//ÅÐ¶ÏÇ¶Ì×£»
+	int k;
+        k=10;
+	if k>1&&k<100
+	{
+		if k==10
+		{
+			out "Ç¶Ì×³É¹¦\n";
+		}
+		else
+		{
+			out "Ç¶Ì×Ê§°Ü\n";
+		}
+	} 
+}

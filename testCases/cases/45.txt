@@ -1,0 +1,6 @@
+int main()      /*转义字符\0是否有效*/
+{
+    string a;
+    a = "he\0llo"
+    out a;
+}

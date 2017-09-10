@@ -1,0 +1,28 @@
+void cal(int a,int b,string c)
+{
+    out a*b,c$"\n";
+}
+
+int cal(int a,int b)
+{
+    return a+b;
+}
+
+real cal(real a,int b)
+{
+    return a*b;
+}
+
+int main()
+{
+    int a,b;
+    real d;
+    string e;
+    in a;
+    in b;
+    in d;
+    in e;
+    out cal(a,b);
+    out cal(a,b+d);
+    cal(a,b,e);
+}

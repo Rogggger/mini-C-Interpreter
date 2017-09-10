@@ -1,0 +1,17 @@
+int main()      /*´òÓ¡Èı½ÇĞÎ*/
+{
+    int n;
+    in n;
+    int i,j;
+    i = j = 0;
+    while i<n
+    {
+        i++;
+        while j<i
+        {
+            j++;
+            out "#";
+        }
+        out "\n";
+    }
+}

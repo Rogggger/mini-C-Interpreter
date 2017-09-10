@@ -1,0 +1,4 @@
+int main(int a)     /*main函数有参数*/
+{
+    out 5;
+}

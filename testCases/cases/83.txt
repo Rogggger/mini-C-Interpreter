@@ -1,0 +1,11 @@
+int main()      /*另一种三角形方法*/
+{
+    int n;
+    in n;
+    int i = 1;
+    while i<=n
+    {
+        out i, "*";
+        out "\n";
+    }
+}

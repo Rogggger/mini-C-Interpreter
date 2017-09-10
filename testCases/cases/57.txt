@@ -1,0 +1,9 @@
+int main()      /*简单选择结构，判断条件不为整数*/
+{
+    real a;
+    a = 1.25;
+    if a
+        out "Approved";
+    else
+        out "Not approved";
+}

@@ -1,0 +1,7 @@
+int main()      /*不符合表达式形式*/
+{
+    int a;
+    a = 5;
+    a = a(a+a);
+    out a;
+}

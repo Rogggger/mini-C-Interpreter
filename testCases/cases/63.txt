@@ -1,0 +1,9 @@
+int main()      /*×Ö·û´®ÀàĞÍ*/
+{
+    string a,b;
+    a = "a";
+    b = "\0";
+    out a||b;
+    out "\n";
+    out a&&b;
+}

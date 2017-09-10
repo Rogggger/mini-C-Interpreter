@@ -1,0 +1,9 @@
+int main()      /*函数未事先声明*/
+{
+    out cal(5,3);
+}
+
+int cal(int a,int b)
+{
+    return a*b;
+}

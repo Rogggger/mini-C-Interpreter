@@ -1,0 +1,12 @@
+int main()      /*检查括号是否能被正确读入，优先级是否能正确判断*/
+{
+    int a;
+    a = 15;
+    a = a + a * a;
+    out a;
+    out "\n";
+    a = 15;
+    a = ( a + a ) * a;
+    out a;
+    out "\n";
+}

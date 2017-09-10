@@ -1,0 +1,42 @@
+int main()      /*¶à²ãÑ¡Ôñ*/
+{
+    int a,b,c;
+    real d,e,f;
+    in a;
+    in b;
+    in c;
+    in d;
+    in e;
+    in f;
+    if a<b
+    {
+        if b<c
+        {
+            if d<e
+                out f;
+            else
+                out -f;
+        }
+        else
+        {
+            if d<f
+                out e;
+            else
+                out -e;
+        }
+    }
+    else
+    {
+        if(b<c)
+        {
+            out "fin.\n";
+        }
+        else
+        {
+            if(e<f)
+                out d;
+            else
+                out -d;
+        }
+    }
+}

@@ -1,0 +1,7 @@
+int main()      /*×Ö·û´®Á¬½Ó*/
+{
+    string a,b;
+    a = "love";
+    b = "ly";
+    out a$b;
+}

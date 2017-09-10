@@ -1,0 +1,11 @@
+int main()          /*造不出用例了*/
+{
+    int whilew;
+    whilew = 2;
+    while whilew
+    {
+        out "meow";
+        out "\n";
+        whilew--;
+    }
+}

@@ -1,0 +1,9 @@
+int main()      /*选择结构的判断条件为赋值语句*/
+{
+    int a,b;
+    a = 5;
+    if b = a
+        out b;
+    else
+        out "No?";
+}

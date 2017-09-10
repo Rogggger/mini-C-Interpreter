@@ -1,0 +1,11 @@
+int a;
+int cal(int a)      /*变量的域问题*/
+{
+    return a+a;
+}
+
+int main()
+{
+    a = 3;
+    out cal(5);
+}

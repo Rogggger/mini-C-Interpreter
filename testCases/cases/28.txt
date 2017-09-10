@@ -1,0 +1,9 @@
+int main()      /*¶àÖØ·ûºÅ0*/
+{
+    int a,b;
+    a = 5;
+    b = 3;
+    int c;
+    c = a-(-(-b));
+    out c;
+}

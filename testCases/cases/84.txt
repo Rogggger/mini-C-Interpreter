@@ -1,0 +1,25 @@
+int main()      //345A
+{
+    //freopen("in.txt","r",stdin);
+    //freopen("out.txt","w",stdout);
+    int m,n,sum;
+    in n;
+    in m;
+    sum = 0;
+    while (m>0&&n>0)&&(m>=2||n>=2)
+    {
+        if m>=n
+        {
+            m = m - 2;
+            n = n + 1;
+            sum = sum + 1;
+        }
+        else
+        {
+            n = n - 2;
+            m = m + 1;
+            sum = sum + 1;
+        }
+    }
+    out sum;
+}

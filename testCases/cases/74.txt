@@ -1,0 +1,20 @@
+int cal(int a,int b)        //МђЕЅжиди
+{
+    return a+b;
+}
+
+real cal(real a,real b)
+{
+    return a*b;
+}
+
+int main()
+{
+    int a;
+    real b;
+    a = 3;
+    b = 1.5;
+    out cal(a,a+2);
+    out "\n";
+    out cal(b,b+0.8);
+}

@@ -1,0 +1,6 @@
+int main()      /*×ªÒå×Ö·û\n*/
+{
+    string a;
+    a = "he\nllo";
+    out a;
+}

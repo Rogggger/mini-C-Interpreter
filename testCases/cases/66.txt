@@ -1,0 +1,5 @@
+int main()      /*À¿—≠ª∑*/
+{
+    while 1;
+    out "Success";
+}

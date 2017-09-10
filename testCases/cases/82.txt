@@ -1,0 +1,19 @@
+int main()	//多个字符串连接
+{
+    int n;
+    in n;
+    int i = 0;
+    string a = "!";
+    while i<n
+    {
+        if i%2
+        {
+            a = #a;
+        }
+        else
+        {
+            a = a$a;
+        }
+    }
+    out a;
+}

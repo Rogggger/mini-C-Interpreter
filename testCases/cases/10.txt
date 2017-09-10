@@ -1,0 +1,14 @@
+int main()      /*按照输出规则输出*/
+{
+    int a;
+    a = 3;
+    out a;
+    out a, "* ";
+    out "a = ", a;
+    real b;
+    b = 1.5;
+    out b;
+    string c;
+    c = "Hello World";
+    out c;
+}

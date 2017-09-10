@@ -1,0 +1,7 @@
+int main()      /*Ä£ÔËËã*/
+{
+    int a,b;
+    a = 5;
+    b = 2;
+    out a % b;
+}

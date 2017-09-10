@@ -1,0 +1,11 @@
+int cal(int a);     /*先声明后定义*/
+
+int main()
+{
+    out cal(5);
+}
+
+int cal(int a)
+{
+    return a + a;
+}

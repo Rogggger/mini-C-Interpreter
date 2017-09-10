@@ -1,0 +1,19 @@
+int product(int a,int b,int c)
+{
+    return a*b*c;
+}
+
+int product(int a,int b)
+{
+    return a*b;
+}
+
+int main()
+{
+    int a,b,c;
+    in a;
+    in b;
+    in c;
+    out product(a,b,c);
+    out product(b,c);
+}

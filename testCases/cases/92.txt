@@ -1,0 +1,38 @@
+//输出数字三角形
+int main()
+{
+	int i,j,k;
+	int n,num;
+	num=1;
+	i=0;
+	j=0;
+	k=0;
+	in n;
+	while i<n
+	{
+		while j<n-i-1
+		{
+			out " ";
+			j=j+1;
+		}
+		while k<=i
+		{
+			out num;
+			num=num+1;
+			k=k+1;
+		}
+		k=0;
+		num--;
+		while k<i
+		{
+			num--;
+			out num;
+			k++;
+		}
+		out "\n";
+		i++;
+		j=0;
+		k=0;
+		num=1;
+	}
+}

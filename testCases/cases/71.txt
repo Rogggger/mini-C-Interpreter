@@ -1,0 +1,9 @@
+int cal(int a)      //多次调用
+{
+    return a+a;
+}
+
+int main()
+{
+    out cal(5)+cal(8);
+}

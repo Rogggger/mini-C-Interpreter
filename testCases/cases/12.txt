@@ -1,0 +1,8 @@
+int main()      /*输出数量不为整数*/
+{
+    real a = 1.5;
+    out a, "*";
+    out a;
+    string b = "hello";
+    out b, "hello";
+}

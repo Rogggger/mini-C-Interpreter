@@ -1,0 +1,13 @@
+int main()      /*µ•≤„—≠ª∑*/
+{
+    int a = 505,sum = 0;
+    while a
+    {
+        a = a-1;
+        if a%2
+        {
+            sum += a;
+        }
+    }
+    out sum;
+}

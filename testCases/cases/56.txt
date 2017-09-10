@@ -1,0 +1,9 @@
+int main()      /*简单选择结构*/
+{
+    int a;
+    a = 5;
+    if a
+        out "Approved";
+    else
+        out "Not approved";
+}

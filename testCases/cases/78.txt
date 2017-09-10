@@ -1,0 +1,52 @@
+int f(int a)        /*调用好多函数*/
+{
+    if a>5
+        return 1;
+    else
+        return 0;
+}
+
+int f1(int a)
+{
+    return f(a);
+}
+
+int f2(int a)
+{
+    return f1(a);
+}
+
+int f3(int a)
+{
+    return f2(a);
+}
+
+int f4(int a)
+{
+    return f3(a);
+}
+
+int f5(int a)
+{
+    return f4(a);
+}
+
+int f6(int a)
+{
+    return f5(a);
+}
+
+int f7(int a)
+{
+    return f6(a);
+}
+
+int f8(int a)
+{
+    return f7(a);
+}
+
+int main()
+{
+    out f8(7);
+}

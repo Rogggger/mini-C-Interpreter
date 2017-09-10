@@ -1,0 +1,30 @@
+int add(int a,int b)        //жиди
+{
+    return a+b;
+}
+
+real add(real a,real b)
+{
+    return a+b;
+}
+
+string add(string a,string b)
+{
+    return a$b;
+}
+
+int main()
+{
+    int a,b;
+    real c,d;
+    string e,f;
+    in a;
+    in b;
+    out add(a,b);
+    in c;
+    in d;
+    out add(c,d);
+    in e;
+    in f;
+    out add(e,f);
+}

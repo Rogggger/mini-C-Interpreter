@@ -1,0 +1,9 @@
+int main()      /*Ğ¡Êı*/
+{
+    real a,b;
+    a = 1.5;
+    b = 1.8;
+    out a||b;
+    out "\n";
+    out a&&b;
+}

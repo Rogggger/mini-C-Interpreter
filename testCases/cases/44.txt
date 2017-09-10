@@ -1,0 +1,8 @@
+//case 43
+int main()      /*×Ö·û´®²»µÈ*/
+{
+    string a,b;
+    a = "hello";
+    b = "world";
+    out a<>b;
+}

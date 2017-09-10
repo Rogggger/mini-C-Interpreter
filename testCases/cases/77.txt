@@ -1,0 +1,22 @@
+int main()      /*算素数，有点大的循环*/
+{
+    int i,j;
+    i = 3;
+    out 2;
+    out "\n";
+    while i<10000
+    {
+        j = 2;
+        while j<(i/2)
+        {
+            if i%j==0
+                break;
+            j++;
+        }
+        if j==i/2
+        {
+            out i;
+            out "\n";
+        }
+    }
+}

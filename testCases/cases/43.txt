@@ -1,0 +1,8 @@
+int main()      /*字符串与数字相等*/
+{
+    string a;
+    int b;
+    a = "a";
+    b = 97;
+    out a==b;
+}

@@ -1,0 +1,26 @@
+string s1,s2;
+int m,n;
+real a,b;
+
+void print(int a,string s)
+{
+    out a, s$"\n";
+}
+
+void print(int a,real i)
+{
+    out "It's a rational number", a*i;
+    out "\n";
+}
+
+int main()
+{
+    in a;
+    in b;
+    in m;
+    in n;
+    in s1;
+    in s2;
+    print(a,s1$s2);
+    print(b,m+n);
+}

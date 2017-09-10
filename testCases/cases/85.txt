@@ -1,0 +1,17 @@
+int main()  //346A
+
+{
+    int a , b , n;
+
+
+    in n;
+    in a;
+    in b;
+    a = a + b;
+    a = a % n;
+    if a==0
+        a = n;
+    if a<0
+        a += n;
+    out a;
+}

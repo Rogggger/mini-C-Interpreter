@@ -1,0 +1,8 @@
+int main()      /*大于等于*/
+{
+    int a = 3,b = 3;
+    out a >= b;
+    out "\n";
+    real c = 3.2,d = 3.2;
+    out c >= d;
+}

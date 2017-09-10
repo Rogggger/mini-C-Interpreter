@@ -1,0 +1,20 @@
+//比较两实型数大小
+real cmp(real s1,real s2)
+{
+	if s1>s2
+        {
+          return s1;
+         } 
+	else
+        {
+           return s2;
+         }
+}
+int main()
+{
+	real m,n,max;
+	in m;
+	in n;
+	max= cmp(m,n);
+	out max;
+}

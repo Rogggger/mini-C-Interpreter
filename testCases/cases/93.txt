@@ -1,0 +1,16 @@
+//¼Ó·¨
+int main()
+{
+	int n;
+	in n;
+	int i;
+	i=1;
+	int final;
+	final=0;
+	while i<=n
+	{
+		final=final+i;
+		i++;
+	}
+	out final;
+}

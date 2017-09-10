@@ -1,0 +1,4 @@
+void main()     /*主函数未定义为整型*/
+{
+    out "It's okay!";
+}

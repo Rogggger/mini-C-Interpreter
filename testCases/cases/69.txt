@@ -1,0 +1,8 @@
+int main()          /*同一域内重复定义同一变量*/
+{
+    int a = 5;
+    out a;
+    out "\n";
+    int a = 3;
+    out a;
+}

@@ -1,0 +1,24 @@
+//输出三角形
+int main()
+{
+	int i=0,j=0,n=0; //定义三角形的大小；
+	in n;
+	while i<n
+	{
+		j=0;
+		while j<n-1-i
+		{
+			out " ";
+			j++;
+		}
+		j=0;
+		while j<2*i-1
+		{
+			out "*";
+			j++;
+		}
+		out "\n";
+		i++;
+	}
+	return 0;
+}

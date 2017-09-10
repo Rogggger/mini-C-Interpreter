@@ -1,0 +1,9 @@
+int main()      /*简单选择结构，判断条件为字符串*/
+{
+    string a;
+    a = "a";
+    if a
+        out "Not approved";
+    else
+        out "Approved";
+}
