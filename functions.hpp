@@ -2,9 +2,26 @@
 #include <string>
 #include "exprtree.h"
 
-class Function{};
+using namespace std;
 
-class Parameters{};
+class Function
+{
+	/* Here's scope */
+	/*parameters's vector*/
+	/*vardecls's pointer*/
+	/*Expression's pointer*/
+	/*Execute this function's method*/
+	/*make paras to actuals*/
+
+}
+
+class Parameters
+{
+	//attribute:
+	/* A vector to save arguments */
+	//methods:
+	 
+}
 
 class VarDecls{};
 

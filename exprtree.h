@@ -1,6 +1,8 @@
 #ifndef EXPRTREE_H
 #define EXPRTREE_H
-#include "actuals.hpp"
+#include "functions.hpp"
+#include "phint.hpp
+"
 class Expression;
 class Expressions;
 class Expr_plus;
@@ -33,14 +35,17 @@ Expression* t_and(Expression* e1, Expression* e2)
 Expression* t_not(Expression* e1, Expression* e2);
 
 Expression* t_if(Expression* con, Expression* et, Expression* ef);
-Expression* t_if(Expression* con, Expression* et);
 Expression* t_while(Expression* con, Expression* expr);
+Expression* t_break();
+Expression* t_continue();
 
 Expression* t_normal(Expression* expr);
 Expression* t_block(Expressions* exprs);
 Expression* t_out(int a, string* hint, string* content);
 Expression* t_in(string* hint, string* identifier);
 Expression* t_call(string* identifier, Actuals* actuals);
+Expression* t_return(expression expr);
+
 
 Expressions* t_single_exprs(Expression* e);
 Expressions* t_append_exprs(Expressions* exprs, Expression* e);

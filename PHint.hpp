@@ -10,6 +10,5 @@ public:
     string* str;
 };
 
-int t_get_int_by_name(string * str);
 
 #endif

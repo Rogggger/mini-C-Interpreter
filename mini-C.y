@@ -5,7 +5,7 @@
 #include "symtab.h"
 #include "exprtree.h"
 #include "functions.hpp"
-#include "PHint.hpp"
+#include "phint.hpp"
 using namespace std;
 extern void yyerror(const char *);
 extern int yylex (void);
