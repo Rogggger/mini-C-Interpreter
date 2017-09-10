@@ -4,7 +4,7 @@
 #include "exprtree.h"
 #define T_Int 258
 #define T_Real 259
-#define T_Void 260
+#define T_String 260
 #define T_Return 261
 #define T_Print 262
 #define T_ReadInt 263
@@ -60,7 +60,7 @@ STRING              (\042[^\042\n]*\042)
 {OPERATOR}          { return yytext[0]; }
 "int"               { return T_Int; }
 "real"			    { return T_Real; }
-
+"string"			{ return T_String; }
 "void"              { return T_Void; }
 "return"            { return T_Return; }
 "print"             { return T_Print; }

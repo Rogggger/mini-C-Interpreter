@@ -1,0 +1,70 @@
+Function *    => function
+
+Parameters*   => parameters
+
+VarDecls*     => vardecls
+VarDecl *     => vardecl
+
+Expressions*  => expressions
+Expression*   => expression
+
+string*       => str
+
+int           => token
+
+
+function t_func(token retType, str funcName, parameters args, vardecls varDec
+					expressions stmts);
+
+parameters t_single_para(token retType, str identifier);
+parameters t_append_para(parameters args, token retType, str identifier);
+
+vardecls t_single_decls(vardecl varDec);
+vardecls t_append_decls(vardecls varDecs, vardecl varDec);
+
+vardecl t_single_decl(token varType, str identifier);
+vardecl t_append_decl(vardecl varDec, str identifier);
+
+expressions t_single_exprs(expression expr);
+expressions t_append_exprs(expressions exprs, expression expr);
+
+expression t_assign(str identifier, expression expr);
+
+expression t_out(int printTimes, str printHint, str printContent);
+
+expression t_in(str readHint, str identifier);
+
+expression t_call(str funcName, actuals acts);
+
+actuals t_single_actuals(expression expr);
+actuals t_append_actuals(actuals acts, expression expr);
+
+expression t_return(expression expr);
+
+expression t_if(expression testExpr, expression thenExpr, expression elseExpr);
+
+expression t_block(expressions stmts);
+
+expression t_break();
+
+expression t_continue();
+
+expression t_while(expression testExpr, expression whileBody);
+
+expression t_plus(expression expr1, expression expr2);
+expression t_sub(expression expr2, expression expr2);
+expression t_mul(expression expr2, expression expr2);
+expression t_div(expression expr2, expression expr2);
+expression t_mod(expression expr2, expression expr2);
+expression t_less(expression expr2, expression expr2);
+expression t_greateq(expression expr2, expression expr2);
+expression t_eq(expression expr2, expression expr2);
+expression t_neq(expression expr2, expression expr2);
+expression t_or(expression expr2, expression expr2);
+expression t_and(expression expr2, expression expr2);
+expression t_neg(expression expr2, expression expr2);
+expression t_not(expression expr2, expression expr2);
+
+expression t_num(num a);
+expression t_string(str s);
+expression t_id(str identifier);

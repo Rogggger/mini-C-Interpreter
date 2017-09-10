@@ -1,14 +1,11 @@
 %{
-#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 #include <string>
 #include "caltype.h"
 #include "symtab.h"
 #include "exprtree.h"
+#include "functions.hpp"
 #include "PHint.hpp"
-#include "actuals.hpp"
 using namespace std;
 extern void yyerror(const char *);
 extern int yylex (void);
@@ -18,14 +15,18 @@ extern int yylex (void);
 %union{
     Expressions* expressions;
     Expression*  expression;
-    string* 	 str;
-    double       num;
+    Function*    function
+    Parameters*  parameters;
+    VarDecls*    vardecls;
+    VarDecl*     vardecl;
     PHint        phint;
     Actuals*     actuals;
+    string* 	 str;
+    double       num;
 }
 
-%token T_Int T_Real T_Void T_Return 
-%token T_Print T_ReadInt 
+%token T_Int T_Real T_String T_Return 
+%token T_Print T_Read 
 %token T_If T_Else T_While T_Break T_Continue 
 %token T_And T_Or T_Le T_Ge T_Eq T_Ne
 %token <num> T_IntConstant T_RealConstant 
@@ -36,18 +37,22 @@ extern int yylex (void);
 %left T_Or
 %left T_And
 %left T_Eq T_Ne
-%left '<' '>' T_Le T_Ge
+%left '<' '>' T_Le T_Ge 
 %left '+' '-'
 %left '*' '/' '%'
 %right '!'
 
-%type<expression> Expr AssignStmt PrintStmt ReadIntStmt 
-%type<expression> CallStmt ReturnStmt IfStmt WhileStmt
-%type<expression> Stmt TestExpr StmtsBlock
-%type<expressions> Stmts 
-%type<num>PrintTimes
-%type<phint> PrintHint
-%type <str> PrintContent
+%type <function> FuncDecl
+%type <parameters> Args _Args
+%type <vardecls> VarDecls _VarDecls
+%type <vardecl> VarDecl
+%type <expression> Expr AssignStmt PrintStmt ReadIntStmt NormalStmt
+%type <expression> CallStmt CallExpr ReturnStmt IfStmt WhileStmt
+%type <expression> Stmt TestExpr StmtsBlock
+%type <expressions> Stmts 
+%type <num> PrintTimes
+%type <phint> PrintHint
+%type <str> PrintContent FuncName
 
 
 %%
@@ -59,18 +64,34 @@ Program:
 
 /*<function>*/
 FuncDecl:
-	/*token <str>      <Parameter>   <>     <Expressions>
-    RetType FuncName '(' Args ')' '{' VarDecls Stmts '}'
+	/*token <str>      <parameters>      <vardecls> <Expressions>
+    RetType FuncName '(' Args ')' FuncStart VarDecls Stmts FuncEnd
                             { 
                             	$$ = t_func($1, $2, $4, $7, $8);
                             }
 ;
 
+FuncStart:
+	'{'						{ /*create function scope*/ };
+;
+
+FuncEnd:
+	'}'						{ /*ends function scope*/ };
+;
+
+
 /*token*/
 RetType:
     T_Int                   { $$ = $1; }
 |	T_Real 					{ $$ = $1; }
-|   T_Void                  { $$ = $1; }
+|   T_String                { $$ = $1; }
+;
+
+/*token*/
+VarType:
+    T_Int                   { $$ = $1; }
+|	T_Real 					{ $$ = $1; }
+|   T_String                { $$ = $1; }
 ;
 
 /*<str>*/
@@ -86,8 +107,8 @@ Args:
 
 /*<parameters>*/
 _Args:
-    T_Int T_Identifier      { t_single_para($1, $2); }
-|   _Args ',' T_Int T_Identifier
+    RetType T_Identifier    { t_single_para($1, $2); }
+|   _Args ',' RetType T_Identifier
                             { t_append_para($1, $3, $4); }
 ;
 
@@ -110,7 +131,7 @@ VarDecl:
 |	VarDecl ',' T_Identifier 
 							{ $$ = t_append_decl($1, $3); }
 ;
-
+ 
 /*<expressions>*/
 Stmts:
     Stmt                    { $$ = t_single_exprs($1); }
@@ -135,7 +156,7 @@ Stmt:
 
 /*<expression>*/
 NormalStmt:
-	Expr ';' 				{ $$ = t_normal($1); }
+	Expr ';' 				{ $$ = $1; }
 ;
 
 /*<expression>*/
@@ -162,24 +183,24 @@ PrintHint:
 /*int*/
 PrintTimes:
     T_IntConstant 			{ $$ = $1; }
-|   T_Identifier  			{ $$ = t_get_int_by_name($1); }
+|   T_Identifier  			{ $$ = t_id($1); }
 ;
 
 /* str */
 PrintContent:
-    T_Identifier        	{ $$ = new string(t_get_int_by_name($1)); }
+    T_Identifier        	{ $$ = new string(t_id($1)); }
 |   T_StringConstant        { $$ = $1; }
 ;
 
 /*<expression>*/
 ReadStmt:
 /*  token      <str>            token
-    T_ReadInt T_StringConstant T_Identifier ';' 
+    T_Read T_StringConstant T_Identifier ';' 
     						{ 
     							$$ = t_in($2, $3)); 
     						}
 /*  token       token */
-|   T_ReadInt T_Identifier ';'                  
+|   T_Read T_Identifier ';'                  
 							{ 
 								$$ = t_in(NULL, $2);
 							}
@@ -204,8 +225,8 @@ Actuals:
 
 /*<actuals>*/
 _Actuals:
-    Expr 					{ $$ = t_single_actual($1); }
-|   _Actuals ',' Expr       { $$ = t_append_actual($3); }
+    Expr 					{ $$ = t_single_actuals($1); }
+|   _Actuals ',' Expr       { $$ = t_append_actuals($1, $3); }
 ;
 
 
@@ -218,7 +239,7 @@ ReturnStmt:
 /*<expression>*/
 IfStmt:
     T_If Expr BlockStmt
-                            { $$ = t_if($2, $3); }
+                            { $$ = t_if($2, $3, NULL); }
 |   T_If Expr BlockStmt T_Else BlockStmt
                             { $$ = t_if($2, $3, $5); }
 ;
