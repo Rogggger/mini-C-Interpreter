@@ -1,12 +1,20 @@
 #ifndef CALTYPE_H
 #define CALTYPE_H
+#include <string>
 
-typedef struct EXPR_DATA
+enum VarType 
 {
-  char name[32];
-  double num;
-}EXPR_DATA;
+	Int=258, Real=259, String=260;
+};
 
-
+struct EXPR_DATA
+{
+	string name;
+	VarType type;
+	union data {
+		string* str;
+		double num;
+	};
+};
 
 #endif

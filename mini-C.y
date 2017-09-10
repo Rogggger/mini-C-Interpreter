@@ -269,8 +269,28 @@ Expr:
     Expr '+' Expr           { $$ = t_plus($1, $3); }
 |   Expr '-' Expr           { $$ = t_sub($1, $3); }
 |   Expr '*' Expr           { $$ = t_mul($1, $3); }
-|   Expr '/' Expr           { $$ = t_div($1, $3); }
-|   Expr '%' Expr           { $$ = t_mod($1, $3); }
+|   Expr '/' Expr           { 
+								try 
+								{
+									$$ = t_div($1, $3); 
+								}
+								catch (string msg)
+								{
+									yyerror(msg.c_str());
+									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
+								}
+							}
+|   Expr '%' Expr           { 
+								try
+								{
+									$$ = t_mod($1, $3); 
+								}
+								catch (string msg)
+								{
+									yyerror(msg.c_str());
+									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
+								}
+							}
 |   Expr '>' Expr           { $$ = t_less($3, $1); }
 |   Expr '<' Expr           { $$ = t_less($1, $3); }
 |   Expr T_Ge Expr          { $$ = t_greateq($1, $3); }
@@ -279,11 +299,10 @@ Expr:
 |   Expr T_Ne Expr          { $$ = t_neq($1, $3); }
 |   Expr T_Or Expr          { $$ = t_or($1, $3); }
 |   Expr T_And Expr         { $$ = t_and($1, $3); }
-|   '-' Expr %prec '!'      { $$ = t_neg($1, $3); }
-|   '!' Expr                { $$ = t_not($1, $3); }
+|   '-' Expr %prec '!'      { $$ = t_neg($1); }
+|   '!' Expr                { $$ = t_not($1); }
 |   T_IntConstant           { $$ = t_num($1); }  
 |   T_RealConstant          { $$ = t_num($1); }
-|   T_StringConstant        { $$ = t_string($1); }
 |   T_Identifier            { $$ = t_id($1); }
 |   CallExpr                { $$ = $1; }
 |   '(' Expr ')'            { $$ = $2; }
