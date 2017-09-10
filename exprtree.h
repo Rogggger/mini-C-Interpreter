@@ -1,8 +1,8 @@
 #ifndef EXPRTREE_H
 #define EXPRTREE_H
 #include "functions.hpp"
-#include "phint.hpp
-"
+#include "phint.hpp"
+
 class Expression;
 class Expressions;
 class Expr_plus;
