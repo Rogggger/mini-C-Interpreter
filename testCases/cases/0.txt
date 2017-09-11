@@ -1,6 +1,7 @@
-int main()      /*分别输入整型，实型，字符串型作为a*/
+//case 0
+int main()      /*输入包含提示信息*/
 {
     int a;
-    in a;
+    in "Please input a integer:" a;
     out a;
 }
