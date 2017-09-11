@@ -1,7 +1,6 @@
 
 #include "exprtree.h"
-#include "caltype.h"
-#include "symtab.h"
+#include "symtab.hpp"
 #include <stdio.h>
 #include <vector>
 
@@ -13,14 +12,29 @@ bool float_eq(double id, double num)
   return false;
 }
 
+struct ExprRet {
+    ExprRet(const double& a, const string& s)
+    {
+        num = a;
+        str = s;
+    }
+    ExprRet()
+    {
+        num = 0;
+        str = "";
+    }
+    int type;
+    double num;
+    string str;
+};
 
 class Expression
 {
 public:
   Expression(){};
-  virtual double execute()
+  virtual ExprRet execute()
   {
-	return 0;
+	return ExprRet();
   };
 };
 
@@ -49,6 +63,14 @@ public:
   std::vector<Expression*> m_vExpr;
 };
 
+class StrExpression : public Expression
+{
+    StrExpression() {;}
+    string execute()
+    {
+        ;
+    }
+};
 
 class Expr_plus : public Expression
 {

@@ -32,10 +32,15 @@ typedef union YYSTYPE
  {
     Expressions* expressions;
     Expression*  expression;
-    string* 	 str;
-    double       num;
+    Function*    function
+    Parameters*  parameters;
+    VarDecls*    vardecls;
+    VarDecl*     vardecl;
     PHint        phint;
     Actuals*     actuals;
+    string*      str;
+    double       num;
+    int          token;
  }YYSTYPE;
 
   extern YYSTYPE yylval;

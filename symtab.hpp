@@ -11,96 +11,96 @@ struct EXPR_DATA
 {
 	string name;
 	int type;
-	union data {
+	union {
 		string* str;
 		double num;
-	};
+	}data;
 };
 
 vector<EXPR_DATA> global_var;
 
-int getType(vector<EXPR_DATA>* vars, string * identifier, int& type);
+int getType(vector<EXPR_DATA>& vars, string * identifier, int& type)
 {
 	int i=0;
-	for (i=0; i<vars->size(); i++) 
+	for (i=0; i<vars.size(); i++) 
 	{
-		if (global_var[i].name == *identifier)
+		if (vars[i].name == *identifier)
 		{
-			type = global_var[i].type;
+			type = vars[i].type;
 			return i;
 		}
 	}
 	return i;
 }
 
-void SetValue(string* identifier, const int& pos, const int& num)
+void SetValue(vector<EXPR_DATA>& vars, string* identifier, const int& pos, const int& num)
 {
-   if (pos == global_var.size())
+   if (pos == vars.size())
    {
    		EXPR_DATA a;
    		a.name = *identifier;
    		a.type = INT;
-   		a.data.num = num;
-   		global_var.push_back(a);
+        a.data.num = num;
+   		vars.push_back(a);
    		return ;
    }
-   global_var[pos].data.num = num;
+   vars[pos].data.num = num;
    return ;
 }
 
-void SetValue(string* identifier, const int& pos, const double& num)
+void SetValue(vector<EXPR_DATA>& vars, string* identifier, const int& pos, const double& num)
 {
-   if (pos == global_var.size())
+   if (pos == vars.size())
    {
    		EXPR_DATA a;
    		a.name = *identifier;
    		a.type = REAL;
    		a.data.num = num;
-   		global_var.push_back(a);
+   		vars.push_back(a);
    		return ;
    }
-   global_var[pos].data.num = num;
+   vars[pos].data.num = num;
    return ;
 }
 
-void SetValue(string* identifier, const int& pos, string* str)
+void SetValue(vector<EXPR_DATA>& vars, string* identifier, const int& pos, string* str)
 {
-   if (pos == global_var.size())
+   if (pos == vars.size())
    {
    		throw string("Undeclared identifier");
    		return;
    }
-   global_var[pos].data.str = str;
+   vars[pos].data.str = str;
    return ;
 }
 
-double GetValue(string* name)
-{
+double GetValue(vector<EXPR_DATA>& vars, string* name)
+{//get value from scope vars
  	int type = 0;
- 	int pos = getType(name, type);
+ 	int pos = getType(vars, name, type);
  	string msg;
- 	if (pos == global_var.size())
+ 	if (pos == vars.size())
  	{
  		msg = "Undeclared identifier, set it to int";
- 		SetValue(name, pos, 0);
+ 		SetValue(vars, name, pos, 0);
  		throw msg;
  		return 0;
  	}
  	if (type == STRING)
  	{
- 		mes = "Invalid usage, cannot get string";
+ 		msg = "Invalid usage, cannot get string";
  		throw msg;
  		return 0;
  	}
-    return global_var[pos].data.num;
+    return vars[pos].data.num;
 }
 
-string* GetString(string* name)
+string* GetString(vector<EXPR_DATA>& vars, string* name)
 {
 	int type = 0;
- 	int pos = getType(name, type);
+ 	int pos = getType(vars, name, type);
  	string msg;
- 	if (pos == global_var.size())
+ 	if (pos == vars.size())
  	{
  		msg = "Undeclared identifier";
  		throw msg;
@@ -108,11 +108,11 @@ string* GetString(string* name)
  	}
  	if (type != STRING)
  	{
- 		mes = "Invalid usage, cannot get string";
+ 		msg = "Invalid usage, cannot get string";
  		throw msg;
  		return 0;
  	}
-    return global_var[pos].data.str;
+    return vars[pos].data.str;
 }
 
 #endif

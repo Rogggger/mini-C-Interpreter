@@ -4,7 +4,7 @@
 
 enum VarType 
 {
-	Int=258, Real=259, String=260;
+	Int=258, Real=259, String=260
 };
 
 struct EXPR_DATA

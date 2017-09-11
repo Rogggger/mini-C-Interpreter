@@ -1,7 +1,6 @@
 %{
 #include <stdio.h>
 #include <string>
-#include "caltype.h"
 #include "symtab.h"
 #include "exprtree.h"
 #include "functions.hpp"
@@ -23,10 +22,11 @@ extern int yylex (void);
     Actuals*     actuals;
     string* 	 str;
     double       num;
+    int          token;
 }
 
-%token T_Int T_Real T_String T_Return 
-%token T_Print T_Read 
+%token <token> T_Int T_Real T_String
+%token T_Return T_Print T_Read
 %token T_If T_Else T_While T_Break T_Continue 
 %token T_And T_Or T_Le T_Ge T_Eq T_Ne
 %token <num> T_IntConstant T_RealConstant 
@@ -43,12 +43,14 @@ extern int yylex (void);
 %right '!'
 
 %type <function> FuncDecl
+%type <token> RetType VarType
 %type <parameters> Args _Args
 %type <vardecls> VarDecls _VarDecls
 %type <vardecl> VarDecl
-%type <expression> Expr AssignStmt PrintStmt ReadIntStmt NormalStmt
+%type <actuals> Actuals _Actuals
+%type <expression> Expr AssignStmt PrintStmt ReadStmt NormalStmt
 %type <expression> CallStmt CallExpr ReturnStmt IfStmt WhileStmt
-%type <expression> Stmt TestExpr StmtsBlock
+%type <expression> Stmt BlockStmt BreakStmt ContinueStmt
 %type <expressions> Stmts 
 %type <num> PrintTimes
 %type <phint> PrintHint
@@ -64,7 +66,7 @@ Program:
 
 /*<function>*/
 FuncDecl:
-	/*token <str>      <parameters>      <vardecls> <Expressions>
+	/*token <str>      <parameters>      <vardecls> <Expressions>*/
     RetType FuncName '(' Args ')' FuncStart VarDecls Stmts FuncEnd
                             { 
                             	$$ = t_func($1, $2, $4, $7, $8);
@@ -128,8 +130,6 @@ _VarDecls:
 VarDecl:
 /*  int      <str>  */
 	VarType T_Identifier	{ $$ = t_single_decl($1, $2); }
-|	VarType T_Identifier '=' Initializer
-							{}
 |	VarDecl ',' T_Identifier 
 							{ $$ = t_append_decl($1, $3); }
 ;
@@ -196,7 +196,7 @@ PrintContent:
 
 /*<expression>*/
 ReadStmt:
-/*  token      <str>            token
+/*  token      <str>            token */
     T_Read T_StringConstant T_Identifier ';' 
     						{ 
     							$$ = t_in($2, $3)); 
@@ -301,8 +301,8 @@ Expr:
 |   Expr T_Ne Expr          { $$ = t_neq($1, $3); }
 |   Expr T_Or Expr          { $$ = t_or($1, $3); }
 |   Expr T_And Expr         { $$ = t_and($1, $3); }
-|   '-' Expr %prec '!'      { $$ = t_neg($1); }
-|   '!' Expr                { $$ = t_not($1); }
+|   '-' Expr %prec '!'      { $$ = t_neg($2); }
+|   '!' Expr                { $$ = t_not($2); }
 |   T_IntConstant           { $$ = t_num($1); }  
 |   T_RealConstant          { $$ = t_num($1); }
 |   T_Identifier            { $$ = t_id($1); }
