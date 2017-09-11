@@ -19,10 +19,10 @@ struct EXPR_DATA
 
 vector<EXPR_DATA> global_var;
 
-int getType(string * identifier, int& type);
+int getType(vector<EXPR_DATA>* vars, string * identifier, int& type);
 {
 	int i=0;
-	for (i=0; i<global_var.size(); i++) 
+	for (i=0; i<vars->size(); i++) 
 	{
 		if (global_var[i].name == *identifier)
 		{

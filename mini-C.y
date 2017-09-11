@@ -128,6 +128,8 @@ _VarDecls:
 VarDecl:
 /*  int      <str>  */
 	VarType T_Identifier	{ $$ = t_single_decl($1, $2); }
+|	VarType T_Identifier '=' Initializer
+							{}
 |	VarDecl ',' T_Identifier 
 							{ $$ = t_append_decl($1, $3); }
 ;

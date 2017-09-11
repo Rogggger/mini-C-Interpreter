@@ -1,33 +1,94 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include "symtab.hpp"
 #include "exprtree.h"
 
 using namespace std;
+extern vector<EXPR_DATA> global_var;
+
+vector<Function*> global_functions;
 
 class Function
 {
-	/* Here's scope */
+public:
+	int retType;
+	string funcName;
 	/*parameters's vector*/
+	Parameters* args;
 	/*vardecls's pointer*/
+	varDecls* varDecs;
 	/*Expression's pointer*/
+	Expressions* Stmts;
 	/*Execute this function's method*/
-	/*make paras to actuals*/
+	double execute()
+	{
 
+	}
+	void initialize(Actuals* actuals)
+	{
+
+	}
+	/*make paras to actuals*/
+	
 }
 
 class Parameters
 {
 	//attribute:
+	vector<pair<int, string*>> args;
 	/* A vector to save arguments */
 	//methods:
-	 
+	void append(pair<int, string*>) {};
+
 }
 
-class VarDecls{};
+class VarDecls
+{
+	vector<VarDecl*> decls;
+	void append(VarDecl* a)
+	{
+		decls.push_back(a);
+		return ;
+	}
+	void execute()
+	{
+		for (vector<VarDecl*>::iterator i = decls.begin(); i != decls.end(); ++i)
+		{
+			i->execute();
+		}
+	}
+}
 
-class VarDecl{};
+class VarDecl
+{
+	int type;
+	vector<string*> decl;
+	void initialize(int t, string* a)
+	{
+		this->type = t;
+		this->decl.push_back(a);
+	}
+	void append(string* a)
+	{
+		decl.push_back(a);
+		return ;
+	}
+	void execute()
+	{
+		/*为当前作用域添加变量*/
+	}
+}
 
-class Actuals{};
+class Actuals
+{
+	vector<Expression*> actus;
+	void append(Expression* a)
+	{
+		actus.push_back(a);
+	}
+
+}
 
 
 Function* t_func(token retType, str funcName, parameters args, vardecls varDec
