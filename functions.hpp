@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "symtab.hpp"
 #include "exprtree.h"
 
@@ -15,6 +16,10 @@ class Parameters
 public:
     //attribute:
     vector<pair<int, string*>> args;
+    Parameters(pair<int, string*> p)
+    {
+        push(p);
+    }
     /* A vector to save arguments */
     //methods:
     void append(pair<int, string*> a)
@@ -30,7 +35,7 @@ class VarDecl
 public:
     int type;
     vector<string*> decl;
-    void initialize(int t, string* a)
+    VarDecl(int t, string* a)
     {
         this->type = t;
         this->decl.push_back(a);
@@ -72,6 +77,10 @@ class VarDecls
 {
 public:
     vector<VarDecl*> decls;
+    VarDecls(VarDecl* a)
+    {
+        push(a);
+    }
     void append(VarDecl* a)
     {
         decls.push_back(a);
@@ -113,6 +122,15 @@ public:
 	/*Execute this function's method*/
 	vector<EXPR_DATA> vars;
 	/*This functions scope*/
+    Function(int r, string* f, Parameters* a, VarDecls* v, Expressions* s)
+    {
+        this->retType = r;
+        this->funcName = *f;
+        this->para = a;
+        this->varDecs = v;
+        this->Stmts = s;
+        vars = global_var;
+    }
 	double execute()
 	{
 		Stmts->execute(vars);
@@ -120,8 +138,6 @@ public:
 	void initialize(Actuals* actuals)
 	{
 		/*make paras to actuals*/
-		/*检查实参形参是否一样*/
-		/*将对应名称的实参放到作用域里*/
 		if (para->args.size() != actuals->actus.size())
 		{
 			throw string("Function initialization failed, args not match");
@@ -136,28 +152,71 @@ public:
             EXPR_DATA a;
             a.name = *(para->args[i].second);
             a.type = *(para->args[i].first);
-            a.data.
+            r.type == 260 ? a.data.str = r.str : a.data.num = r.num;
+            vars.push_back(a);
 		}
 	}
-	
+
 };
 
 vector<Function*> global_functions;
 
+Function* t_func(int retType, string* funcName, Parameters* args, VarDecls* varDec, Expressions* stmts)
+{
+    return new Function(retType, funcName, args, varDec, stmts);
+}
 
-Function* t_func(int retType, string* funcName, Parameters* args, VarDecls* varDec
-					expressions stmts);
+Parameters* t_single_para(int retType, string* identifier)
+{
+    return new Parameters(make_pair(retType, identifier));
+}
 
-Parameters* t_single_para(token retType, str identifier);
-Parameters* t_append_para(parameters args, token retType, str identifier);
+Parameters* t_append_para(Parameters* args, int retType, string* identifier)
+{
+    if (args && identifier)
+        args->append(make_pair(retType, identifier));
+    return args;
+}
 
-VarDecls* t_single_decls(vardecl varDec);
-VarDecls* t_append_decls(vardecls varDecs, vardecl varDec);
+VarDecls* t_single_decls(VarDecl* varDec)
+{
+    return new VarDecls(varDec);
+}
 
-VarDecl* t_single_decl(token varType, str identifier);
-VarDecl* t_append_decl(vardecl varDec, str identifier);
-Actuals* t_single_actuals(expression expr);
-Actuals* t_append_actuals(actuals acts, expression expr);
-Expression* t_call(string* identifier, Actuals* actuals);
+VarDecls* t_append_decls(VarDecls* varDecs, VarDecl* varDec)
+{
+    if (varDecs && varDec)
+        varDecs->append(varDec);
+    return varDecs;
+}
+
+VarDecl* t_single_decl(int varType, string* identifier)
+{
+    return new VarDecl(varType, identifier);
+}
+
+VarDecl* t_append_decl(VarDecl* varDec, string* identifier)
+{
+    if (varDec && identifier)
+        varDec->append(identifier);
+    return varDec;
+}
+
+Actuals* t_single_actuals(Expression* expr)
+{
+    return new Actuals(expr);
+}
+
+Actuals* t_append_actuals(Actuals* acts, Expression* expr)
+{
+    if (acts && expr)
+        acts->append(expr);
+    return acts;
+}
+
+Expression* t_call(string* identifier, Actuals* actuals)
+{
+    return new Expr_call(identifier, actuals);
+}
 
 #endif

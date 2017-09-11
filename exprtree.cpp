@@ -3,7 +3,8 @@
 #include "symtab.hpp"
 #include <stdio.h>
 #include <vector>
-
+#include<string>
+using namespaces std;
 bool float_eq(double id, double num)
 {
   double sub = id - num;
@@ -13,15 +14,17 @@ bool float_eq(double id, double num)
 }
 
 struct ExprRet {
-    ExprRet(const double& a, const string& s)
+    ExprRet(const double& a, const string& s,const int &t)
     {
         num = a;
-        str = s;
+		str = s;
+		type = t;
     }
     ExprRet()
     {
         num = 0;
         str = "";
+		type = 258;
     }
     int type;
     double num;
@@ -32,7 +35,7 @@ class Expression
 {
 public:
   Expression(){};
-  virtual ExprRet execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	return ExprRet();
   };
@@ -50,26 +53,17 @@ public:
   {
     m_vExpr.push_back(e);
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
     for (int i = 0; i < m_vExpr.size(); i++)
     {
-	  if (m_vExpr[i])
-		m_vExpr[i]->execute();
+		if (m_vExpr[i])
+			m_vExpr[i]->execute(vector<EXPR_DATA>& v);
     }
-    return 0;
+	return ExprRet();
   };
 
   std::vector<Expression*> m_vExpr;
-};
-
-class StrExpression : public Expression
-{
-    StrExpression() {;}
-    string execute()
-    {
-        ;
-    }
 };
 
 class Expr_plus : public Expression
@@ -80,13 +74,24 @@ public:
 	m_e1 = e1;
 	m_e2 = e2;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_e1 || !m_e2)
-	  return 0;
-	double num1 = m_e1->execute();
-	double num2 = m_e2->execute();
-	return  num1 + num2;
+	  return ExprRet();
+	ExprRet num1 = m_e1->execute(vector<EXPR_DATA>& v);
+	ExprRet num2 = m_e2->execute(vector<EXPR_DATA>& v);
+	if (num1.type == 258 && num2.type == 258)
+	{
+		return ExprRet((int)num1.num + (int)num2.num, "",258);
+	}
+	else if ((num1.type == 259 || num2.type == 259) && (num1.type != 260 && num2.type != 260))
+	{
+		return ExprRet(num1.num + num2.num, "", 259);
+	}
+	else
+	{
+		throw(string("string can not be plused"));
+	}
   }
 
 protected:
@@ -102,13 +107,24 @@ public:
 	m_e1 = e1;
 	m_e2 = e2;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_e1 || !m_e2)
-	  return 0;
-	double num1 = m_e1->execute();
-	double num2 = m_e2->execute();
-	return  num1 - num2;
+		return ExprRet();
+	ExprRet num1 = m_e1->execute(vector<EXPR_DATA>& v);
+	ExprRet num2 = m_e2->execute(vector<EXPR_DATA>& v);
+	if (num1.type == 258 && num2.type == 258)
+	{
+		return ExprRet((int)num1.num - (int)num2.num, "", 258);
+	}
+	else if ((num1.type == 259 || num2.type == 259) && (num1.type != 260 && num2.type != 260))
+	{
+		return ExprRet(num1.num - num2.num, "", 259);
+	}
+	else
+	{
+		throw(string("string can not be subed"));
+	}
   }
 
 protected:
@@ -124,13 +140,24 @@ public:
 	m_e1 = e1;
 	m_e2 = e2;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_e1 || !m_e2)
-	  return 0;
-	double num1 = m_e1->execute();
-	double num2 = m_e2->execute();
-	return  num1 * num2;
+		return ExprRet();
+	ExprRet num1 = m_e1->execute(vector<EXPR_DATA>& v);
+	ExprRet num2 = m_e2->execute(vector<EXPR_DATA>& v);
+	if (num1.type == 258 && num2.type == 258)
+	{
+		return ExprRet((int)num1.num * (int)num2.num, "", 258);
+	}
+	else if ((num1.type == 259 || num2.type == 259) && (num1.type != 260 && num2.type != 260))
+	{
+		return ExprRet(num1.num * num2.num, "", 259);
+	}
+	else
+	{
+		throw(string("string can not be mul"));
+	}
   }
 
 protected:
@@ -146,84 +173,237 @@ public:
 	m_e1 = e1;
 	m_e2 = e2;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_e1 || !m_e2)
-	  return 0;
-	double num1 = m_e1->execute();
-	double num2 = m_e2->execute();
-	return  num1 / num2;
+		return ExprRet();
+	ExprRet num1 = m_e1->execute(vector<EXPR_DATA>& v);
+	ExprRet num2 = m_e2->execute(vector<EXPR_DATA>& v);
+	if (num1.type == 258 && num2.type == 258)
+	{
+		if ((int)num2.num==0)
+		{
+			throw(string("divided by zero"));
+		}
+		else 
+			return ExprRet((int)num1.num / (int)num2.num, "", 258);
+	}
+	else if ((num1.type == 259 || num2.type == 259) && (num1.type != 260 && num2.type != 260))
+	{
+		if (float_eq(num2.num,0))
+		{
+			throw(string("divided by zero"));
+		}
+		else 
+			return ExprRet(num1.num / num2.num, "", 259);
+	}
+	else
+	{
+		throw(string("string can not be divided"));
+	}
   }
 
 protected:
   Expression* m_e1;
   Expression* m_e2;
 };
+class Expr_mod : public Expression
+{
+public:
+	Expr_mod(Expression* e1, Expression* e2)
+	{
+		m_e1 = e1;
+		m_e2 = e2;
+	}
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e1 || !m_e2)
+			return 0;
+		ExprRet num1 = m_e1->execute(vector<EXPR_DATA>& v);
+		ExprRet num2 = m_e2->execute(vector<EXPR_DATA>& v);
+		if (num1.type == 258 && num2.type == 258)
+		{
+			if ((int)num2.num == 0)
+			{
+				throw(string("divided by zero"));
+			}
+			else
+				return ExprRet((int)num1.num % (int)num2.num, "", 258);
+		}
+		else
+		{
+			throw(string("Only an integer can take the remainder"));
+		}
+	}
 
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
 class Expr_assign : public Expression
 {
 public:
-  Expr_assign(char* name, Expression* e)
+  Expr_assign(string* name, Expression* e)
   {
-	m_name[0]=0;
-	if (name)
-	  strcpy(m_name, name);
-	m_e = e;
+	  if (name)
+		  m_name = name;
+	  m_e = e;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
-	if (m_name[0]==0 || !m_e)
-	  return 0;
+	if (!m_name || !m_e)
+		return ExprRet();
 	
-	double ace = m_e->execute();
-	
-	SetValue(m_name, ace);
-	
+	ExprRet ace = m_e->execute(vector<EXPR_DATA>& v);
+	int pos, type;
+	pos = getType(v, m_name, type);
+	if (ace.type == 258)
+	{
+		SetValue(v, m_name, pos,() ace.num);
+	}
+	else if (ace.type == 259)
+	{
+		SetValue(v, m_name, pos, ace.num);
+	}
+	else if (ace.type == 260)
+	{
+		SetValue(v, m_name, pos, ace.str);
+	}
 	return ace;
   }
 
 protected:
-  char        m_name[32];
+  string*    m_name;
   Expression* m_e;
 };
 
-class Expr_num : public Expression
+class Expr_num_double : public Expression
 {
 public:
-  Expr_num(double num)
+  Expr_num_double(double num)
   {
 	m_num = num;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
-	return m_num;
+	  return ExprRet(num, "", 259);
   }
-
 protected:
   double m_num;
 };
-
+class Expr_num_int : public Expression
+{
+public:
+	Expr_num_int(int num)
+	{
+		m_num = num;
+	}
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		return ExprRet(num, "", 258);
+	}
+protected:
+	int double m_num;
+};
+class Expr_out :public Expression
+{
+public:
+	Expr_out(int _printTimes, string* _printHint, string* _printContent)
+	{
+		printTimes = _printTimes;
+		printHint = _printHint;
+		printContent = _printContent;
+	}
+	virtual ExprRet execute(vector<EXPR_DATA>& v))
+	{
+		if (printHint)
+		{
+			printf("%s", *printHint);
+		}
+		for (int i = 0; i < printTimes; i++)
+		{
+			printf("%s", *printContent);
+		}
+		return ExprRet();
+	}
+protected:
+	int printTimes;
+	string* printHint;
+	string* printContent;
+};
+class Expr_in :public Expression
+{
+public:
+	Expr_in(string* _readHint, string* _identifier)
+	{
+		readHint = _readHint;
+		identifier = _identifier;
+	}
+	virtual ExprRet excute(vector<EXPR_DATA>& v)
+	{
+		if (readHint)
+		{
+			printf("%s", readHint);
+		}
+		int _type;
+		int pos = getType(v,identifier, _type);
+		if (_type == 258 || _type == 0)//int,Î´ÉùÃ÷
+		{
+			int tmp;
+			scanf("%d", &tmp);
+			SetValue(v,identifier, pos, tmp);
+		}
+		else if (_type == 259)//real
+		{
+			double tmp;
+			scanf("%lf", &tmp);
+			SetValue(v,identifier, pos, tmp);
+		}
+		else if (_type == 260)//string
+		{
+			string* tmp = new string;
+			cin >> *tmp;
+			SetValue(v,identifier, pos, tmp);
+		}
+		return ExprRet();
+	}
+protected:
+	string* readHint;
+	string* identifier;
+};
 class Expr_ID : public Expression
 {
 public:
-  Expr_ID(char* name)
+  Expr_ID(string* name)
   {
-	m_name[0]=0;
-	if (name)
-	  strcpy(m_name, name);
+	  if (name)
+		  m_name = name;
   }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
-	if (m_name[0]==0)
-	  return 0;
-	double num = 0;
-	num = GetValue(m_name);
-	SetValue(m_name, num);
-	return num;
+	if (!m_name)
+	  return ExprRet();
+	int type;
+	int pos = getType(v, m_name, type);
+	if (type == 258)
+	{
+		int num = getValue(v, m_name, pos);
+		return ExprRet(num, "", 258);
+	}
+	else if (type == 259)
+	{
+		double num = getValue(v, m_name, pos);
+		return ExprRet(num, "", 259);
+	}
+	else
+	{
+		string num = getString(v, m_name, pos);
+		return ExprRet(0, num, 260);
+	}
   }
 
 protected:
-  char m_name[32];
+  string* m_name;
 };
 
 class Expr_if : public Expression
@@ -241,24 +421,32 @@ public:
         m_et = et;
         m_ef = NULL;
     }
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
       if (!m_con || !m_et) {
           if (!m_ef) {
-              double b = m_con->execute();
-              if (float_eq(b, 0))
-                  m_ef->execute();
+			  ExprRet b = m_con->execute(v);
+			  if (b.type == 260)
+			  {
+				  throw(string("string can not be a Value"));
+			  }
+              if (float(b.num,0))
+                  m_ef->execute(v);
               else
-                  m_et->execute();
+                  m_et->execute(v);
           }
           else {
-              double b = m_con->execute();
-              if (!float_eq(b,0)) {
-                  m_et->execute();
+			  ExprRet b = m_con->execute(v);
+			  if (b.type == 260)
+			  {
+				  throw(string("string can not be a Value"));
+			  }
+              if (!float_eq(b.num,0)) {
+                  m_et->execute(v);
               }
           }
       }
-	  return 0;
+	  return ExprRet();
   }
 
 protected:
@@ -276,26 +464,58 @@ public:
     m_e2 = e2;
   }
   
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_e1 || !m_e2)
-	  return 0;
+		return ExprRet();
 
-    double num1 = m_e1->execute();
-    double num2 = m_e2->execute();
-
-    if (num1 < num2)
+    ExprRet num1 = m_e1->execute(v);
+    ExprRet num2 = m_e2->execute(v);
+	if (num1.type == 260 || num2.type == 260)
+	{
+		throw(string("string can not be compared"));
+	}
+    if (num1.num < num2.num)
     {
-      return 1;
+      return ExprRet(1,"",258);
     }
-    return 0;
+    else return ExprRet(0, "", 258);
   }
 
 protected:
   Expression* m_e1;
   Expression* m_e2;
 };
+class Expr_greateq : public Expression
+{
+public:
+	Expr_greateq(Expression* e1, Expression* e2)
+	{
+		m_e1 = e1;
+		m_e2 = e2;
+	}
 
+	virtual double execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e1 || !m_e2)
+			return 0;
+		ExprRet num1 = m_e1->execute(v);
+		ExprRet num2 = m_e2->execute(v);
+		if (num1.type == 260 || num2.type == 260)
+		{
+			throw(string("string can not be compared"));
+		}
+		if (num1.num >= num2.num)
+		{
+			return ExprRet(1, "", 258);
+		}
+		else return ExprRet(0, "", 258);
+	}
+
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
 class Expr_eq : public Expression
 {
 public:
@@ -305,26 +525,157 @@ public:
     m_e2 = e2;
   }
   
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_e1 || !m_e2)
-	  return 0;
+		return ExprRet();
 	  
-    double num1 = m_e1->execute();
-    double num2 = m_e2->execute();
-
-    if (float_eq(num1, num2))
+	ExprRet num1 = m_e1->execute(v);
+	ExprRet num2 = m_e2->execute(v);
+	if (num1.type == 260 || num2.type == 260)
+	{
+		throw(string("string can not be compared"));
+	}
+    if (float_eq(num1.num, num2.num))
     {
-      return 1;
+		return ExprRet(1, "", 258);
     }
-    return 0;
+	return ExprRet(0, "", 258);
   }
 
 protected:
   Expression* m_e1;
   Expression* m_e2;
 };
+class Expr_neq : public Expression
+{
+public:
+	Expr_neq(Expression* e1, Expression* e2)
+	{
+		m_e1 = e1;
+		m_e2 = e2;
+	}
 
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e1 || !m_e2)
+			return 0;
+
+		ExprRet num1 = m_e1->execute(v);
+		ExprRet num2 = m_e2->execute(v);
+		if (num1.type == 260 || num2.type == 260)
+		{
+			throw(string("string can not be compared"));
+		}
+		if (!float_eq(num1.num, num2.num))
+		{
+			return ExprRet(1, "", 258);
+		}
+		return ExprRet(0, "", 258);
+	}
+
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
+class Expr_or : public Expression
+{
+public:
+	Expr_or(Expression* e1, Expression* e2)
+	{
+		m_e1 = e1;
+		m_e2 = e2;
+	}
+
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e1 || !m_e2)
+			return 0;
+
+		ExprRet num1 = m_e1->execute(v);
+		ExprRet num2 = m_e2->execute(v);
+		if (num1.type == 260 || num2.type == 260)
+		{
+			throw(string("string can not be compared"));
+		}
+		return ExprRet((int)num1.num || (int)num2.num, "", 258);
+	}
+
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
+class Expr_and : public Expression
+{
+public:
+	Expr_and(Expression* e1, Expression* e2)
+	{
+		m_e1 = e1;
+		m_e2 = e2;
+	}
+
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e1 || !m_e2)
+			return 0;
+
+		ExprRet num1 = m_e1->execute(v);
+		ExprRet num2 = m_e2->execute(v);
+		if (num1.type == 260 || num2.type == 260)
+		{
+			throw(string("string can not be compared"));
+		}
+		return ExprRet((int)num1.num && (int)num2.num, "", 258);
+	}
+
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
+class Expr_neg : public Expression
+{
+public:
+	Expr_neg(Expression* e)
+	{
+		m_e = e;
+	}
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e)
+			return ExprRet();
+		ExprRet num = m_e->execute(v);
+		if (num.type == 260)
+		{
+			throw(string("string can not be a value"));
+		}
+		return ExprRet(-num.num, "", num.type);
+	}
+
+protected:
+	Expression* m_e;
+};
+class Expr_not : public Expression
+{
+public:
+	Expr_not(Expression* e)
+	{
+		m_e = e;
+	}
+	virtual ExprRet execute(vector<EXPR_DATA>& v)
+	{
+		if (!m_e)
+			return ExprRet(v);
+		ExprRet num = m_e->execute(v);
+		if (num.type == 260)
+		{
+			throw(string("string can not be a value"));
+		}
+		return ExprRet(!(int)num.num, "", 258);
+	}
+
+protected:
+	Expression* m_e;
+};
 class Expr_while : public Expression
 {
 public:
@@ -334,20 +685,23 @@ public:
     m_e = e;
   }
   
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
-	if (!m_con || !m_e)
-	  return 0;
+	  if (!m_con || !m_e)
+		  return ExprRet();
 	
-    double ace = m_con->execute();
-
-    while (!float_eq(ace, 0))
+    ExprRet ace = m_con->execute( v);
+	if (ace.type == 260)
+	{
+		throw(string("string can not be a value"));
+	}
+    while (!float_eq(ace.num, 0))
     {
-      m_e->execute();
-      ace = m_con->execute();
+      m_e->execute(v);
+      ace = m_con->execute(v);
     }
 
-    return 0;
+	return ExprRet();
   }
 
 protected:
@@ -363,28 +717,16 @@ public:
     m_exprs = exprs;
   }
   
-  virtual double execute()
+  virtual ExprRet execute(vector<EXPR_DATA>& v)
   {
 	if (!m_exprs)
-	  return 0;
-    return m_exprs->execute();
+	  return ExprRet();
+    return m_exprs->execute(v);
   }
 
 protected:
   Expressions* m_exprs;
 };
-
-void Execute(Expression* e)
-{
-  if (e)
-	printf("%0.2lf\n", e->execute());
-}
-
-void Execute(Expressions* exprs)
-{
-  if (exprs)
-    exprs->execute();
-}
 
 Expression* t_id(char* name)
 {
@@ -420,7 +762,10 @@ Expression* t_div(Expression* e1, Expression* e2)
 {
   return new Expr_div(e1, e2);
 }
-
+Expression* t_mod(Expression* e1, Expression* e2)
+{
+	return new Expr_mod(e1, e2);
+}
 Expression* t_if(Expression* con, Expression* et, Expression* ef)
 {
   return new Expr_if(con, et, ef);
@@ -436,11 +781,34 @@ Expression* t_less(Expression* e1, Expression* e2)
   return new Expr_less(e1, e2);
 }
 
+Expression* t_greateq(Expression* e1, Expression* e2)
+{
+	return new Expr_greateq(e1, e2);
+}
 Expression* t_eq(Expression* e1, Expression* e2)
 {
-  return new Expr_eq(e1, e2);
+	return new Expr_eq(e1, e2);
 }
-
+Expression* t_neq(Expression* e1, Expression* e2)
+{
+	return new Expr_neq(e1, e2);
+}
+Expression* t_or(Expression* e1, Expression* e2)
+{
+	return new Expr_or(e1, e2);
+}
+Expression* t_and(Expression* e1, Expression* e2)
+{
+	return new Expr_and(e1, e2);
+}
+Expression* t_neg(Expression* e1)
+{
+	return new Expr_eq(e1);
+}
+Expression* t_not(Expression* e1)
+{
+	return new Expr_not(e1);
+}
 Expression* t_while(Expression* con, Expression* e)
 {
   return new Expr_while(con, e);
