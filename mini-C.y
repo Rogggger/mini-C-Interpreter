@@ -3,18 +3,18 @@
 #include <string>
 #include "symtab.h"
 #include "exprtree.h"
-#include "functions.hpp"
-#include "phint.hpp"
+#include "functions.h"
+#define YYDEBUG 1
 using namespace std;
 extern void yyerror(const char *);
 extern int yylex (void);
-
+ vector<Function*>global_functions;
 %}
 
 %union{
     Expressions* expressions;
     Expression*  expression;
-    Function*    function
+    Function*    function;
     Parameters*  parameters;
     VarDecls*    vardecls;
     VarDecl*     vardecl;
@@ -26,8 +26,9 @@ extern int yylex (void);
 }
 
 %token <token> T_Int T_Real T_String
-%token T_Return T_Print T_Read
-%token T_If T_Else T_While T_Break T_Continue 
+%token T_Print T_Read
+%token T_If T_Else T_While
+//%token T_Return T_Break T_Continue
 %token T_And T_Or T_Le T_Ge T_Eq T_Ne
 %token <num> T_IntConstant T_RealConstant 
 %token <str> T_StringConstant 
@@ -49,12 +50,13 @@ extern int yylex (void);
 %type <vardecl> VarDecl
 %type <actuals> Actuals _Actuals
 %type <expression> Expr AssignStmt PrintStmt ReadStmt NormalStmt
-%type <expression> CallStmt CallExpr ReturnStmt IfStmt WhileStmt
-%type <expression> Stmt BlockStmt BreakStmt ContinueStmt
+%type <expression> CallStmt CallExpr IfStmt WhileStmt
+%type <expression> Stmt BlockStmt
+//%type <expression> ReturnStmtBreakStmt ContinueStmt
 %type <expressions> Stmts 
-%type <num> PrintTimes
+%type <expression> PrintTimes PrintContent
 %type <phint> PrintHint
-%type <str> PrintContent FuncName
+%type <str> FuncName
 
 
 %%
@@ -149,11 +151,11 @@ Stmt:
 |   ReadStmt                { /* empty */ }
 |   BlockStmt				{ /* empty */ }
 |   CallStmt                { /* empty */ }
-|   ReturnStmt              { /* empty */ }
+//|   ReturnStmt              { /* empty */ }
 |   IfStmt                  { /* empty */ }
 |   WhileStmt               { /* empty */ }
-|   BreakStmt               { /* empty */ }
-|   ContinueStmt            { /* empty */ }
+//|   BreakStmt               { /* empty */ }
+//|   ContinueStmt            { /* empty */ }
 ;
 
 /*<expression>*/
@@ -172,7 +174,7 @@ PrintStmt:
     T_Print PrintHint ',' PrintContent ';'
                             { $$ = t_out($2.count, $2.str, $4); }
 |   T_Print PrintContent ';'   
-							{ $$ = t_out(1, NULL, $2); }
+							{ $$ = t_out(t_num_int(1), NULL, $2); }
 ;
 
 /*<phint>*/
@@ -182,16 +184,16 @@ PrintHint:
 |   PrintTimes           	{ $$.count = $1; $$.str = NULL; }
 ;
 
-/*int*/
+/* expression */
 PrintTimes:
-    T_IntConstant 			{ $$ = $1; }
+    T_IntConstant 			{ $$ = t_num_int($1); }
 |   T_Identifier  			{ $$ = t_id($1); }
 ;
 
-/* str */
+/* expression */
 PrintContent:
-    T_Identifier        	{ $$ = new string(t_id($1)); }
-|   T_StringConstant        { $$ = $1; }
+    T_Identifier        	{ $$ = t_id($1); }
+|   T_StringConstant        { $$ = t_num_string($1); }
 ;
 
 /*<expression>*/
@@ -199,7 +201,7 @@ ReadStmt:
 /*  token      <str>            token */
     T_Read T_StringConstant T_Identifier ';' 
     						{ 
-    							$$ = t_in($2, $3)); 
+    							$$ = t_in($2, $3);
     						}
 /*  token       token */
 |   T_Read T_Identifier ';'                  
@@ -232,16 +234,16 @@ _Actuals:
 ;
 
 
-/*<expression>*/
+/*<expression>
 ReturnStmt:
     T_Return Expr ';'       { $$ = t_return($2); }
 |   T_Return ';'            { $$ = t_return(NULL); }
-;
+;*/
 
 /*<expression>*/
 IfStmt:
     T_If Expr BlockStmt
-                            { $$ = t_if($2, $3, NULL); }
+                            { $$ = t_if($2, $3); }
 |   T_If Expr BlockStmt T_Else BlockStmt
                             { $$ = t_if($2, $3, $5); }
 ;
@@ -251,15 +253,15 @@ BlockStmt:
     '{' Stmts '}'           { $$ = t_block($2); }
 ;
 
-/*<expression>*/
+/*<expression>
 BreakStmt:
     T_Break ';'     		{ $$ = t_break(); }
-;
+;*/
 
-/*<expression>*/
+/*<expression>
 ContinueStmt:
     T_Continue ';'          { $$ = t_continue(); }
-;
+;*/
 
 /*<expression>*/
 WhileStmt:
@@ -303,8 +305,9 @@ Expr:
 |   Expr T_And Expr         { $$ = t_and($1, $3); }
 |   '-' Expr %prec '!'      { $$ = t_neg($2); }
 |   '!' Expr                { $$ = t_not($2); }
-|   T_IntConstant           { $$ = t_num($1); }  
-|   T_RealConstant          { $$ = t_num($1); }
+|   T_IntConstant           { $$ = t_num_int($1); }
+|   T_RealConstant          { $$ = t_num_double($1); }
+|   T_StringConstant        { $$ = t_num_string($1); }
 |   T_Identifier            { $$ = t_id($1); }
 |   CallExpr                { $$ = $1; }
 |   '(' Expr ')'            { $$ = $2; }
@@ -314,5 +317,18 @@ Expr:
 %%
 
 int main() {
-    return yyparse();
+    //yydebug = 1;
+    if(yyparse() == 0)
+    {
+        printf("%d\n", global_functions.size());
+        for (int i=0; i<global_functions.size(); i++)
+        {
+            printf("%s", global_functions[i]->funcName.c_str());
+            if (global_functions[i]->funcName == "main")
+            {
+                global_functions[i]->execute();
+            }
+        }
+    }
+    return 0;
 }

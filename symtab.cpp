@@ -1,23 +1,13 @@
-#ifndef SYMTAB_HPP
-#define SYMTAB_HPP
 #include <string>
 #include <vector>
+#include "symtab.h"
 using namespace std;
 #define INT 258
 #define REAL 259
 #define STRING 260
 
-struct EXPR_DATA
-{
-	string name;
-	int type;
-	union {
-		string* str;
-		double num;
-	}data;
-};
 
-vector<EXPR_DATA> global_var;
+ vector<EXPR_DATA> global_var;
 
 int getType(vector<EXPR_DATA>& local_var, string * identifier, int& type)
 {
@@ -97,5 +87,3 @@ string* GetString(vector<EXPR_DATA>& local_var, string* name, const int& pos)
  	}
     return local_var[pos].data.str;
 }
-
-#endif

@@ -1,28 +1,28 @@
 %{
 #include <string>
-#include "caltype.h"
-#include "exprtree.h"
+#include "functions.h"
+
 #define T_Int 258
 #define T_Real 259
 #define T_String 260
-#define T_Return 261
-#define T_Print 262
-#define T_ReadInt 263
-#define T_If 264
-#define T_Else 265
-#define T_While 266
-#define T_Break 267
-#define T_Continue 268
-#define T_And 269
-#define T_Or 270
-#define T_Le 271
-#define T_Ge 272
-#define T_Eq 273
-#define T_Ne 274
-#define T_IntConstant 275
-#define T_RealConstant 276
-#define T_StringConstant 277
-#define T_Identifier 278
+#define T_Print 261
+#define T_Read 262
+#define T_If 263
+#define T_Else 264
+#define T_While 265
+//#define T_Return 266
+//#define T_Break 267
+//#define T_Continue 268
+#define T_And 266
+#define T_Or 267
+#define T_Le 268
+#define T_Ge 269
+#define T_Eq 270
+#define T_Ne 271
+#define T_IntConstant 272
+#define T_RealConstant 273
+#define T_StringConstant 274
+#define T_Identifier 275
 using namespace std;
 int cur_line = 1;
 void yyerror(const char *msg);
@@ -32,7 +32,7 @@ typedef union YYSTYPE
  {
     Expressions* expressions;
     Expression*  expression;
-    Function*    function
+    Function*    function;
     Parameters*  parameters;
     VarDecls*    vardecls;
     VarDecl*     vardecl;
@@ -66,15 +66,11 @@ STRING              (\042[^\042\n]*\042)
 "int"               { return T_Int; }
 "real"			    { return T_Real; }
 "string"			{ return T_String; }
-"void"              { return T_Void; }
-"return"            { return T_Return; }
-"print"             { return T_Print; }
-"readint"           { return T_ReadInt; }
+"out"               { return T_Print; }
+"in"                { return T_Read; }
 "while"             { return T_While; }
 "if"                { return T_If; }
 "else"              { return T_Else; }
-"break"             { return T_Break; }
-"continue"          { return T_Continue; }
 "<="                { return T_Le; }
 ">="                { return T_Ge; }
 "=="                { return T_Eq; }
@@ -86,7 +82,7 @@ STRING              (\042[^\042\n]*\042)
 {REAL}				{ yylval.num = atof(yytext); return T_RealConstant; }
 {STRING}            { 
 						yylval.str = new string(yytext); 
-						yylval.str = yylval.str.substr(2,yylval.str.length()-2);
+						yylval.str = new string(yylval.str->substr(1,yylval.str->length()-2));
 						return T_StringConstant; 
 					}
 {IDENTIFIER}        { 
