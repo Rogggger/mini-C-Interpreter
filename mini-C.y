@@ -57,7 +57,7 @@ ExprRet global_return_value;
 %type <vardecls> VarDecls _VarDecls
 %type <vardecl> VarDecl
 %type <actuals> Actuals _Actuals
-%type <expression> Expr AssignStmt PrintStmt ReadStmt NormalStmt
+%type <expression> Expr PrintStmt ReadStmt NormalStmt
 %type <expression> CallStmt CallExpr IfStmt WhileStmt DoUntilStmt
 %type <expression> Stmt BlockStmt
 %type <expression> ReturnStmt BreakStmt ContinueStmt
@@ -156,7 +156,6 @@ Stmts:
 Stmt:
     ';'                     { /* empty */ }
 |   NormalStmt				{ /* empty */ }
-|   AssignStmt              { /* empty */ }
 |   PrintStmt               { /* empty */ }
 |   ReadStmt                { /* empty */ }
 |   BlockStmt				{ /* empty */ }
@@ -172,12 +171,6 @@ Stmt:
 /*<expression>*/
 NormalStmt:
 	Expr ';' 				{ $$ = $1; }
-;
-
-/*<expression>*/
-AssignStmt:
-    T_Identifier '=' Expr ';'
-                            { $$ = t_assign($1, $3); }
 ;
 
 /*<expression>*/
@@ -304,6 +297,7 @@ Expr:
 |   '-' Expr %prec '!'      { $$ = t_neg($2); }
 |   '+' Expr %prec '!'		{ $$ = $2;}
 |   '!' Expr                { $$ = t_not($2); }
+|   T_Identifier '=' Expr   { $$ = t_assign($1, $3); }
 |   T_IntConstant           { $$ = t_num_int($1); }
 |   T_RealConstant          { $$ = t_num_double($1); }
 |   T_StringConstant        { $$ = t_num_string($1); }
