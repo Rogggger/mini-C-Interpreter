@@ -29,11 +29,12 @@ vector<Function*>global_functions;
 %token <token> T_Int  T_Real  T_String
 %token T_Print T_Read
 %token T_If T_Else T_While
-//%token T_Return T_Break T_Continue
 %token T_And T_Or T_Le T_Ge T_Eq T_Ne
 %token <num> T_IntConstant T_RealConstant 
 %token <str> T_StringConstant 
 %token <str> T_Identifier
+%token T_Return T_Break T_Continue
+%token T_Do T_Until
 
 %right '='
 %left T_Or
@@ -53,9 +54,9 @@ vector<Function*>global_functions;
 %type <vardecl> VarDecl
 %type <actuals> Actuals _Actuals
 %type <expression> Expr AssignStmt PrintStmt ReadStmt NormalStmt
-%type <expression> CallStmt CallExpr IfStmt WhileStmt
+%type <expression> CallStmt CallExpr IfStmt WhileStmt DoUntilStmt
 %type <expression> Stmt BlockStmt
-//%type <expression> ReturnStmtBreakStmt ContinueStmt
+%type <expression> ReturnStmt BreakStmt ContinueStmt
 %type <expressions> Stmts 
 %type <expression> PrintTimes PrintContent
 %type <phint> PrintHint
@@ -156,11 +157,12 @@ Stmt:
 |   ReadStmt                { /* empty */ }
 |   BlockStmt				{ /* empty */ }
 |   CallStmt                { /* empty */ }
-//|   ReturnStmt              { /* empty */ }
+|   ReturnStmt              { /* empty */ }
 |   IfStmt                  { /* empty */ }
+|   DoUntilStmt             { /* empty */ }
 |   WhileStmt               { /* empty */ }
-//|   BreakStmt               { /* empty */ }
-//|   ContinueStmt            { /* empty */ }
+|   BreakStmt               { /* empty */ }
+|   ContinueStmt            { /* empty */ }
 ;
 
 /*<expression>*/
@@ -239,11 +241,11 @@ _Actuals:
 ;
 
 
-/*<expression>
+/*<expression>*/
 ReturnStmt:
     T_Return Expr ';'       { $$ = t_return($2); }
 |   T_Return ';'            { $$ = t_return(NULL); }
-;*/
+;
 
 /*<expression>*/
 IfStmt:
@@ -258,61 +260,36 @@ BlockStmt:
     '{' Stmts '}'           { $$ = t_block($2); }
 ;
 
-/*<expression>
+/*<expression>*/
 BreakStmt:
     T_Break ';'     		{ $$ = t_break(); }
-;*/
+;
 
-/*<expression>
+/*<expression>*/
 ContinueStmt:
     T_Continue ';'          { $$ = t_continue(); }
-;*/
+;
 
 /*<expression>*/
 WhileStmt:
     T_While Expr BlockStmt
-                   			 { $$ = t_while($2, $3); }
+                            { $$ = t_while($2, $3); }
+;
+
+DoUntilStmt:
+    T_Do BlockStmt T_Until Expr
+                            { $$ = t_dountil($2, $4); }
 ;
 
 Expr:
     Expr '+' Expr           { $$ = t_plus($1, $3); }
 |   Expr '-' Expr           { $$ = t_sub($1, $3); }
 |   Expr '*' Expr           { $$ = t_mul($1, $3); }
-|   Expr '/' Expr           { 
-								try 
-								{
-									$$ = t_div($1, $3); 
-								}
-								catch (string msg)
-								{
-									yyerror(msg.c_str());
-									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
-								}
-							}
-|   Expr '%' Expr           { 
-								try
-								{
-									$$ = t_mod($1, $3); 
-								}
-								catch (string msg)
-								{
-									yyerror(msg.c_str());
-									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
-								}
-							}
-|   Expr '^' Expr          { 
-								try
-								{
-									$$ = t_pow($1, $3); 
-								}
-								catch (string msg)
-								{
-									yyerror(msg.c_str());
-									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
-								}
-							}
-|  Expr '$' Expr            { $$ = t_splus($1, $3); }
-|  Expr '#'                 { $$ = t_ssub($1); }
+|   Expr '/' Expr           { $$ = t_div($1, $3); }
+|   Expr '%' Expr           { $$ = t_mod($1, $3); }
+|   Expr '^' Expr           { $$ = t_pow($1, $3); }
+|   Expr '$' Expr           { $$ = t_splus($1, $3); }
+|   Expr '#'                { $$ = t_ssub($1); }
 |   Expr '>' Expr           { $$ = t_less($3, $1); }
 |   Expr '<' Expr           { $$ = t_less($1, $3); }
 |   Expr T_Ge Expr          { $$ = t_greateq($1, $3); }
