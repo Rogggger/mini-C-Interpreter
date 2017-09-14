@@ -281,6 +281,33 @@ protected:
 	Expression* m_con;
 	Expression* m_e;
 };
+
+class Expr_break : public Expression
+{
+public:
+    Expr_break();
+    virtual ExprRet execute(vector<EXPR_DATA>& v);
+    
+protected:
+};
+class Expr_continue : public Expression
+{
+public:
+    Expr_continue();
+    virtual ExprRet execute(vector<EXPR_DATA>& v);
+    
+protected:
+};
+class Expr_return : public Expression
+{
+public:
+    Expr_return();
+    Expr_return(Expression* e);
+    virtual ExprRet execute(vector<EXPR_DATA>& v);
+    
+protected:
+    Expression* m_e;
+};
 class Expr_block : public Expression
 {
 public:
@@ -330,11 +357,11 @@ Expression* t_while(Expression* con, Expression* expr);
 Expression* t_dountil(Expression* e, Expression* con);
 Expression* t_break();
 Expression* t_continue();
+Expression* t_return(Expression* expr);
 
 Expression* t_block(Expressions* exprs);
 Expression* t_out(Expression* _printTimes, string* _printHint, Expression* _printContent);
 Expression* t_in(string* _readHint, string* _identifier);
-Expression* t_return(Expression* expr);
 
 
 Expressions* t_single_exprs(Expression* e);

@@ -719,12 +719,40 @@ Expr_while::Expr_while(Expression* con, Expression* e)
 	 } while (float_eq(ace.num, 0));
 	 return ExprRet();
  }
+Expr_break::Expr_break()
+{
+    ;
+}
+ExprRet Expr_break::execute(vector<EXPR_DATA>& v)
+{
+    return ExprRet();
+}
+Expr_continue::Expr_continue()
+{
+    ;
+}
+ExprRet Expr_continue::execute(vector<EXPR_DATA>& v)
+{
+    return ExprRet();
+}
+Expr_return::Expr_return()
+{
+    ;
+}
+Expr_return::Expr_return(Expression* expr)
+{
+    this->m_e = expr;
+}
+ExprRet Expr_return::execute(vector<EXPR_DATA>& v)
+{
+    return ExprRet();
+}
 Expr_block::Expr_block(Expressions* exprs)
 {
     m_exprs = exprs;
 }
 
- ExprRet Expr_block::execute(vector<EXPR_DATA>& v)
+ExprRet Expr_block::execute(vector<EXPR_DATA>& v)
 {
     if (!m_exprs)
         return ExprRet();
@@ -842,6 +870,18 @@ Expression* t_while(Expression* con, Expression* e)
 Expression* t_dountil(Expression* con, Expression* e)
 {
 	return new Expr_dountil(con, e);
+}
+Expression* t_break()
+{
+    return new Expr_break();
+}
+Expression* t_continue()
+{
+    return new Expr_continue();
+}
+Expression* t_return(Expression* con)
+{
+    return new Expr_return(con);
 }
 Expression* t_block(Expressions* exprs)
 {
