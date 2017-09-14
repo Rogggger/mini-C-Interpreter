@@ -271,10 +271,10 @@ protected:
     Expression* m_con;
     Expression* m_e;
 };
-class Expr_doWhile : public Expression
+class Expr_dountil : public Expression
 {
 public:
-	Expr_doWhile(Expression* con, Expression* e);
+	Expr_dountil(Expression* e, Expression* con);
 	virtual ExprRet execute(vector<EXPR_DATA>& v);
 
 protected:
@@ -327,7 +327,7 @@ Expression* t_if(Expression* con, Expression* et, Expression* ef);
 Expression* t_if(Expression* con, Expression* et);
 
 Expression* t_while(Expression* con, Expression* expr);
-Expression* t_doWhile(Expression* con, Expression* expr);
+Expression* t_dountil(Expression* e, Expression* con);
 Expression* t_break();
 Expression* t_continue();
 
