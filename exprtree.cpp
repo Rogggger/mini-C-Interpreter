@@ -346,9 +346,12 @@ Expr_assign::Expr_assign(string* name, Expression* e)
     ExprRet ace = m_e->execute(v);
     int pos, type;
     pos = getType(v, m_name, type);
-    
     if (ace.type == 258)
     {
+        if(type==260)
+        {
+            yyerror("int can not be assigned by a string\n");
+        }
         if (pos == -1) {
             cout<<"Warning: try to assign a undeclared variable \"" + *m_name << " \", it\'ll be regard as a INT\n";
         }
@@ -356,6 +359,10 @@ Expr_assign::Expr_assign(string* name, Expression* e)
     }
     else if (ace.type == 259)
     {
+        if(type==260)
+        {
+            yyerror("real can not be assigned by a string\n");
+        }
         if (pos == -1) {
             cout<<"Warning: try to assign a undeclared variable \"" + *m_name << " \", it\'ll be regard as a INT\n";
         }

@@ -191,16 +191,16 @@ void unterminate_string() {
 }
 
 void yyerror(const char *msg) {
-    fprintf(stderr, "Error at line %d:\n\t%s\n", cur_line, msg);
-	system("pause");
+    printf("Error occured:\n\t%s\n", msg);
     exit(-1);
 }
 
 int main(int argc, char ** argv) {
     //yydebug = 1;
     //char * str = "int main() { int a; in a; out a; }";
-    is<<argv[2];
-    YY_BUFFER_STATE buffer = yy_scan_string(argv[1]);
+    //is<<argv[2];
+    is << "";
+    //YY_BUFFER_STATE buffer = yy_scan_string(argv[1]);
     if(yyparse() == 0)
     {
         for (int i=0; i<global_functions.size(); i++)
@@ -215,5 +215,5 @@ int main(int argc, char ** argv) {
             }
         }
     }
-    yy_delete_buffer(buffer);
+    //yy_delete_buffer(buffer);
 }
