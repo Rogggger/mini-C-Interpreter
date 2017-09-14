@@ -40,8 +40,10 @@ vector<Function*>global_functions;
 %left T_And
 %left T_Eq T_Ne
 %left '<' '>' T_Le T_Ge 
-%left '+' '-'
+%left '+' '-' '$'
 %left '*' '/' '%'
+%right '^'
+%right '#'
 %right '!'
 
 %type <function> FuncDecl
@@ -298,6 +300,19 @@ Expr:
 									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
 								}
 							}
+|   Expr '^' Expr          { 
+								try
+								{
+									$$ = t_pow($1, $3); 
+								}
+								catch (string msg)
+								{
+									yyerror(msg.c_str());
+									printf("At %d.%d-%d.%d\n", @3.first_line, @3.first_column, @3.last_line, @3.last_column);
+								}
+							}
+|  Expr '$' Expr            { $$ = t_splus($1, $3); }
+|  Expr '#'                 { $$ = t_ssub($1); }
 |   Expr '>' Expr           { $$ = t_less($3, $1); }
 |   Expr '<' Expr           { $$ = t_less($1, $3); }
 |   Expr T_Ge Expr          { $$ = t_greateq($1, $3); }

@@ -2,7 +2,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <math.h>
 #include "exprtree.h"
+using namespace std;
+
 extern void yyerror(const char *);
 
 using namespace std;
@@ -181,7 +184,7 @@ Expr_mod::Expr_mod(Expression* e1, Expression* e2)
     m_e1 = e1;
     m_e2 = e2;
 }
- ExprRet Expr_mod::execute(vector<EXPR_DATA>& v)
+ExprRet Expr_mod::execute(vector<EXPR_DATA>& v)
 {
     if (!m_e1 || !m_e2)
         return ExprRet();
@@ -203,8 +206,77 @@ Expr_mod::Expr_mod(Expression* e1, Expression* e2)
         return ExprRet();
     }
 }
-
-
+Expr_pow::Expr_pow(Expression* e1, Expression* e2)
+{
+	m_e1 = e1;
+	m_e2 = e2;
+}
+ExprRet Expr_pow::execute(vector<EXPR_DATA>& v)
+{
+	if (!m_e1 || !m_e2)
+		return ExprRet();
+	ExprRet num1 = m_e1->execute(v);
+	ExprRet num2 = m_e2->execute(v);
+	if (num1.type == 260 || num2.type == 260)
+	{
+		yyerror("string can not participate in the power operation");
+		return ExprRet();
+	}
+	else if (num2.num < 1&&num1.num<0)
+	{
+		yyerror("Unable to calculate");
+		return ExprRet();
+	}
+	else if (num1.type == 258 && num1.type == 258)
+	{
+		return ExprRet((int)pow(num1.num, num2.num), "", 258);
+	}
+	else
+	{
+		return ExprRet(pow(num1.num, num2.num), "", 259);
+	}
+}
+Expr_splus::Expr_splus(Expression* e1, Expression* e2)
+{
+	m_e1 = e1;
+	m_e2 = e2;
+}
+ExprRet Expr_splus::execute(vector<EXPR_DATA>& v)
+{
+	if (!m_e1 || !m_e2)
+		return ExprRet();
+	ExprRet num1 = m_e1->execute(v);
+	ExprRet num2 = m_e2->execute(v);
+	if (num1.type == 260 && num2.type == 260)
+	{
+		return ExprRet(0, num1.str + num2.str, 260);
+	}
+	else
+	{
+		yyerror("only type string can be used in this operation");
+		return ExprRet();
+	}
+}
+Expr_ssub::Expr_ssub(Expression* e1)
+{
+	m_e1 = e1;
+}
+ExprRet Expr_ssub::execute(vector<EXPR_DATA>& v)
+{
+	if (!m_e1)
+		return ExprRet();
+	ExprRet num1 = m_e1->execute(v);
+	if (num1.type != 260)
+	{
+		yyerror("only type string can be used in this operation");
+		return ExprRet();
+	}
+	else
+	{
+		string tmp = num1.str.substr(0, num1.str.length() - 1);
+		return ExprRet(0,tmp,260);
+	}
+}
 Expr_assign::Expr_assign(string* name, Expression* e)
 {
     if (name)
@@ -685,6 +757,18 @@ Expression* t_div(Expression* e1, Expression* e2)
 Expression* t_mod(Expression* e1, Expression* e2)
 {
 	return new Expr_mod(e1, e2);
+}
+Expression* t_pow(Expression* e1, Expression* e2)
+{
+	return new Expr_pow(e1, e2);
+}
+Expression* t_splus(Expression* e1, Expression* e2)
+{
+	return new Expr_splus(e1, e2);
+}
+Expression* t_ssub(Expression* e1)
+{
+	return new Expr_ssub(e1);
 }
 Expression* t_if(Expression* con, Expression* et, Expression* ef)
 {
