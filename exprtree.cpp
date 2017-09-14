@@ -387,32 +387,35 @@ Expr_if::Expr_if(Expression* con, Expression* et)
 }
  ExprRet Expr_if::execute(vector<EXPR_DATA>& v)
 {
-  if (!m_con || !m_et) {
-      if (!m_ef) {
-          ExprRet b = m_con->execute(v);
-          if (b.type == 260)
-          {
-              yyerror("string can not be a Value");
-              return ExprRet();
-          }
-          if (float_eq(b.num,0))
-              m_ef->execute(v);
-          else
-              m_et->execute(v);
-      }
-      else {
-          ExprRet b = m_con->execute(v);
-          if (b.type == 260)
-          {
-              yyerror("string can not be a Value");
-              return ExprRet();
-          }
-          if (!float_eq(b.num,0)) {
-              m_et->execute(v);
-          }
-      }
-  }
-  return ExprRet();
+    if (!m_con || !m_et) {
+        return ExprRet();
+    }
+    else {
+        if (m_ef) {
+            ExprRet b = m_con->execute(v);
+            if (b.type == 260)
+            {
+                yyerror("string can not be a Value");
+                return ExprRet();
+            }
+            if (float_eq(b.num,0))
+                m_ef->execute(v);
+            else
+                m_et->execute(v);
+        }
+        else {
+            ExprRet b = m_con->execute(v);
+            if (b.type == 260)
+            {
+                yyerror("string can not be a Value");
+                return ExprRet();
+            }
+            if (!float_eq(b.num,0)) {
+                m_et->execute(v);
+            }
+        }
+        return ExprRet();
+    }
 }
 
 

@@ -66,7 +66,7 @@ public:
     /*This functions scope*/
     Function(int r, string* f, Parameters* a, VarDecls* v, Expressions* s);
     ExprRet execute();
-    void initialize(Actuals* actuals);
+    void initialize(ExprRet* a, const int &);
     
 };
 

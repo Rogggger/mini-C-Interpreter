@@ -22,7 +22,7 @@ Parameters::Parameters(pair<int, string*> p)
 
 void Parameters::append(pair<int, string*> a)
 {
-    cout<< a.second->c_str();
+    //cout<< a.second->c_str();
     this->args.push_back(a);
     return ;
 }
@@ -105,39 +105,27 @@ Function::Function(int r, string* f, Parameters* a, VarDecls* v, Expressions* s)
 }
 ExprRet Function::execute()
 {
-    if (varDecs)
+    if (varDecs && varDecs->decls.size())
         varDecs->execute(vars);
     return Stmts->execute(vars);
 }
-void Function::initialize(Actuals* actuals)
+void Function::initialize(ExprRet* a, const int & length)
 {
     /*make paras to actuals*/
-    if (para->args.size() != actuals->actus.size())
+    for (int i=0; i<length; i++)
     {
-        yyerror("Function initialization failed, args not match");
-        return ;
-    }
-    for (int i = 0; i < para->args.size(); ++i)
-    {
-        ExprRet r = actuals->actus[i]->execute(vars);
-        if (para->args[i].first != r.type)//参数不同
+        EXPR_DATA temp;
+        temp.type = para->args[i].first;
+        if (temp.type == 260)
         {
-            yyerror("Function initialization failed, args not match");
-            return ;
-        }
-        EXPR_DATA a;
-        a.name = *(para->args[i].second);
-        a.type = para->args[i].first;
-        if (r.type == 260)
-        {
-            a.data.str = &(r.str);
+            temp.data.str = new string(a[i].str);
         }
         else
         {
-            a.data.num = r.num;
+            temp.data.num = a[i].num;
         }
-        
-        vars.push_back(a);
+        temp.name = *(para->args[i].second);
+        vars.push_back(temp);
     }
 }
 
@@ -151,9 +139,10 @@ Expr_call::Expr_call(string* id, Actuals* act)
 }
  ExprRet Expr_call::execute(vector<EXPR_DATA>& v)
 {
-    ExprRet *a[] = new ExprRet[actuals->actus.size()];
+    ExprRet *a = new ExprRet[actuals->actus.size()];
+    ExprRet ret ;
     for (int i=0; i<actuals->actus.size(); i++) {
-        (*a)[i] = actuals->actus[i]->execute(v);
+        a[i] = actuals->actus[i]->execute(v);
     }
     for (int i = 0; i < global_functions.size(); ++i)
     {
@@ -163,9 +152,8 @@ Expr_call::Expr_call(string* id, Actuals* act)
             for (int j=0; j<actuals->actus.size(); j++)
             {
                 /*  parameters type == Actuals' value */
-                ExprRet a = actuals->actus[j]->execute(v);
                 if (global_functions[i]->para->args[j].first
-                    != a.type)
+                    != a[j].type)
                 {
                     flag = 1;
                     break;
@@ -177,13 +165,13 @@ Expr_call::Expr_call(string* id, Actuals* act)
             }
             else
             {
-                global_functions[i]->initialize(actuals);
-                a = global_functions[i]->execute();
+                global_functions[i]->initialize(a, actuals->actus.size());
+                ret = global_functions[i]->execute();
                 break;
             }
         }
     }
-    return a;
+    return ret;
 }
 
 Function* t_func(int retType, string* funcName, Parameters* args, VarDecls* varDec, Expressions* stmts)
