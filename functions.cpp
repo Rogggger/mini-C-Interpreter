@@ -151,7 +151,10 @@ Expr_call::Expr_call(string* id, Actuals* act)
 }
  ExprRet Expr_call::execute(vector<EXPR_DATA>& v)
 {
-    ExprRet a;
+    ExprRet *a[] = new ExprRet[actuals->actus.size()];
+    for (int i=0; i<actuals->actus.size(); i++) {
+        (*a)[i] = actuals->actus[i]->execute(v);
+    }
     for (int i = 0; i < global_functions.size(); ++i)
     {
         if (global_functions[i]->funcName == *identifier)

@@ -323,10 +323,8 @@ int main() {
     //yydebug = 1;
     if(yyparse() == 0)
     {
-        printf("%d\n", global_functions.size());
         for (int i=0; i<global_functions.size(); i++)
         {
-            printf("%s", global_functions[i]->funcName.c_str());
             if (global_functions[i]->funcName == "main")
             {
                 global_functions[i]->execute();

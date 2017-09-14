@@ -107,47 +107,47 @@ string * handleEscapeCharacter(char * s)
             {
                 case 'a':
                     (*str)[i] = '\a'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 'b':
                     (*str)[i] = '\b'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 'f':
                     (*str)[i] = '\f'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 'n':
                     (*str)[i] = '\n'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 'r':
                     (*str)[i] = '\r'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 't':
                     (*str)[i] = '\t'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 'v':
                     (*str)[i] = '\v'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case '\\':
                     (*str)[i] = '\\'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case '\'':
                     (*str)[i] = '\''; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case '\"':
                     (*str)[i] = '\"'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 case 0:
                     (*str)[i] = '\0'; //replace the character
-                    str->erase(str->begin()+i);//erase No i+1
+                    str->erase(str->begin()+i+1);//erase No i+1
                     break;
                 default:
                     break;
