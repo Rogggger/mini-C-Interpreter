@@ -31,4 +31,6 @@
 *.out
 *.app
 
-# 
+# Flex and Bison
+*.tab.c
+lex.yy.c
