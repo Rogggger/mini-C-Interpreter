@@ -7,18 +7,23 @@
 using namespace std;
 extern vector<EXPR_DATA> global_var;
 extern int getType(vector<EXPR_DATA>&, string*, int&);
-
 extern vector<Function*> global_functions;
+extern void yyerror(const char *);
+
+Parameters::Parameters()
+{
+    ;
+}
 
 Parameters::Parameters(pair<int, string*> p)
 {
-    args.push_back(p);
+    this->append(p);
 }
-/* A vector to save arguments */
-//methods:
+
 void Parameters::append(pair<int, string*> a)
 {
-    args.push_back(a);
+    cout<< a.second->c_str();
+    this->args.push_back(a);
     return ;
 }
 
@@ -39,9 +44,10 @@ void VarDecl::execute(vector<EXPR_DATA>& vars)
     {
         int tempType=0;
         int pos = getType(vars, *i, tempType);
-        if (pos == vars.size())
+        if (pos != -1 && tempType == type)
         {
-            continue;
+            yyerror("Variable multipal declaration");
+            return ;
         }
         EXPR_DATA a;
         a.type = type;
@@ -62,7 +68,7 @@ void VarDecl::execute(vector<EXPR_DATA>& vars)
 
 VarDecls::VarDecls(VarDecl* a)
 {
-    decls.push_back(a);
+    append(a);
 }
 void VarDecls::append(VarDecl* a)
 {
@@ -99,6 +105,8 @@ Function::Function(int r, string* f, Parameters* a, VarDecls* v, Expressions* s)
 }
 ExprRet Function::execute()
 {
+    if (varDecs)
+        varDecs->execute(vars);
     return Stmts->execute(vars);
 }
 void Function::initialize(Actuals* actuals)
@@ -106,14 +114,16 @@ void Function::initialize(Actuals* actuals)
     /*make paras to actuals*/
     if (para->args.size() != actuals->actus.size())
     {
-        throw string("Function initialization failed, args not match");
+        yyerror("Function initialization failed, args not match");
+        return ;
     }
     for (int i = 0; i < para->args.size(); ++i)
     {
         ExprRet r = actuals->actus[i]->execute(vars);
         if (para->args[i].first != r.type)//参数不同
         {
-            throw string("Function initialization failed, args not match");
+            yyerror("Function initialization failed, args not match");
+            return ;
         }
         EXPR_DATA a;
         a.name = *(para->args[i].second);
@@ -175,11 +185,16 @@ Expr_call::Expr_call(string* id, Actuals* act)
 
 Function* t_func(int retType, string* funcName, Parameters* args, VarDecls* varDec, Expressions* stmts)
 {
-    return new Function(retType, funcName, args, varDec, stmts);
+    //printf("Type:%d\nName:%s\n", retType, funcName->c_str());
+    Function * f = new Function(retType, funcName, args, varDec, stmts);
+    global_functions.push_back(f);
+    return f;
 }
-
 Parameters* t_single_para(int retType, string* identifier)
 {
+    if (identifier == NULL) {
+        return new Parameters();
+    }
     return new Parameters(make_pair(retType, identifier));
 }
 

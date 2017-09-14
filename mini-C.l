@@ -28,6 +28,7 @@ int cur_line = 1;
 void yyerror(const char *msg);
 void unrecognized_char(char c);
 void unterminate_string();
+string * handleEscapeCharacter(char * s);
 typedef union YYSTYPE
  {
     Expressions* expressions;
@@ -81,8 +82,7 @@ STRING              (\042[^\042\n]*\042)
 {INTEGER}           { yylval.num = atof(yytext); return T_IntConstant; }
 {REAL}				{ yylval.num = atof(yytext); return T_RealConstant; }
 {STRING}            { 
-						yylval.str = new string(yytext); 
-						yylval.str = new string(yylval.str->substr(1,yylval.str->length()-2));
+                        yylval.str = handleEscapeCharacter(yytext);
 						return T_StringConstant; 
 					}
 {IDENTIFIER}        { 
@@ -94,6 +94,68 @@ STRING              (\042[^\042\n]*\042)
 .                   { unrecognized_char(yytext[0]); }
 
 %%
+
+string * handleEscapeCharacter(char * s)
+{
+    string temp(s);
+    string *str = new string(temp.substr(1,yylval.str->length()-2));
+    for (int i=0; i<str->size()-1; i++) 
+    {
+        if ((*str)[i] == '\\')
+        {
+            switch((*str)[i+1])
+            {
+                case 'a':
+                    (*str)[i] = '\a'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 'b':
+                    (*str)[i] = '\b'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 'f':
+                    (*str)[i] = '\f'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 'n':
+                    (*str)[i] = '\n'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 'r':
+                    (*str)[i] = '\r'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 't':
+                    (*str)[i] = '\t'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 'v':
+                    (*str)[i] = '\v'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case '\\':
+                    (*str)[i] = '\\'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case '\'':
+                    (*str)[i] = '\''; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case '\"':
+                    (*str)[i] = '\"'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                case 0:
+                    (*str)[i] = '\0'; //replace the character
+                    str->erase(str->begin()+i);//erase No i+1
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    return str;
+}
 
 int yywrap(void) { 
     return 1;

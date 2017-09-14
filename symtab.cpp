@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 #include "symtab.h"
@@ -5,9 +6,8 @@ using namespace std;
 #define INT 258
 #define REAL 259
 #define STRING 260
+extern void yyerror(const char *);
 
-
- vector<EXPR_DATA> global_var;
 
 int getType(vector<EXPR_DATA>& local_var, string * identifier, int& type)
 {
@@ -20,12 +20,13 @@ int getType(vector<EXPR_DATA>& local_var, string * identifier, int& type)
 			return i;
 		}
 	}
-	return i;
+    type = -1;
+	return -1;
 }
 
 void SetValue(vector<EXPR_DATA>& local_var, string* identifier, const int& pos, const int& num)
 {
-    if (pos == local_var.size())
+    if (pos == -1)
     {//identifier does not exist
    		EXPR_DATA a;
    		a.name = *identifier;
@@ -40,11 +41,11 @@ void SetValue(vector<EXPR_DATA>& local_var, string* identifier, const int& pos, 
 
 void SetValue(vector<EXPR_DATA>& local_var, string* identifier, const int& pos, const double& num)
 {
-   if (pos == local_var.size())
+   if (pos == -1)
    {//identifier does not exist
    		EXPR_DATA a;
    		a.name = *identifier;
-   		a.type = REAL;
+   		a.type = INT;// Undeclare set to INT
    		a.data.num = num;
    		local_var.push_back(a);
    		return ;
@@ -55,10 +56,10 @@ void SetValue(vector<EXPR_DATA>& local_var, string* identifier, const int& pos, 
 
 void SetValue(vector<EXPR_DATA>& local_var, string* identifier, const int& pos, string* str)
 {
-   if (pos == local_var.size())
+   if (pos == -1)
    {//identifier does not exist
-   		throw string("Undeclared identifier");
-   		return;
+       string msg = "Error : \"" + *identifier + "\" Undeclared identifier";
+       yyerror(msg.c_str());
    }
    local_var[pos].data.str = str;
    return ;
@@ -66,23 +67,20 @@ void SetValue(vector<EXPR_DATA>& local_var, string* identifier, const int& pos, 
 
 double GetValue(vector<EXPR_DATA>& local_var, string* name, const int& pos)
 {//get value from scope local_var
- 	string msg;
- 	if (pos == local_var.size())
+ 	if (pos == -1)
  	{
- 		msg = "Undeclared identifier, set it to int";
  		SetValue(local_var, name, pos, 0);
- 		throw msg;
+        std::cout<< "Warning : \""+ *name + "\" Undeclared identifier, it\'ll be regard as a INT\n";
  	}
     return local_var[pos].data.num;
 }
 
 string* GetString(vector<EXPR_DATA>& local_var, string* name, const int& pos)
 {
- 	string msg;
- 	if (pos == local_var.size())
+ 	if (pos == -1)
  	{
- 		msg = "Undeclared identifier";
- 		throw msg;
+        string msg = "Error : \""+ *name + "\" Undeclared identifier";
+ 		yyerror(msg.c_str());
  		return 0;
  	}
     return local_var[pos].data.str;

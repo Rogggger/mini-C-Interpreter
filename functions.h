@@ -15,6 +15,7 @@ class Parameters
 public:
     //attribute:
     vector<pair<int, string*> > args;
+    Parameters();
     Parameters(pair<int, string*> p);
     /* A vector to save arguments */
     //methods:

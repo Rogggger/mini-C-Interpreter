@@ -8,7 +8,8 @@
 using namespace std;
 extern void yyerror(const char *);
 extern int yylex (void);
- vector<Function*>global_functions;
+vector<EXPR_DATA> global_var;
+vector<Function*>global_functions;
 %}
 
 %union{
@@ -25,7 +26,7 @@ extern int yylex (void);
     int          token;
 }
 
-%token <token> T_Int T_Real T_String
+%token <token> T_Int  T_Real  T_String
 %token T_Print T_Read
 %token T_If T_Else T_While
 //%token T_Return T_Break T_Continue
@@ -86,16 +87,18 @@ FuncEnd:
 
 /*token*/
 RetType:
-    T_Int                   { $$ = $1; }
-|	T_Real 					{ $$ = $1; }
-|   T_String                { $$ = $1; }
+T_Int                       {
+                                $$ = 258;
+                            }
+|	T_Real 					{ $$ = 259; }
+|   T_String                { $$ = 260; }
 ;
 
 /*token*/
 VarType:
-    T_Int                   { $$ = $1; }
-|	T_Real 					{ $$ = $1; }
-|   T_String                { $$ = $1; }
+    T_Int                   { $$ = 258; }
+|	T_Real 					{ $$ = 259; }
+|   T_String                { $$ = 260; }
 ;
 
 /*<str>*/
@@ -111,9 +114,9 @@ Args:
 
 /*<parameters>*/
 _Args:
-    RetType T_Identifier    { t_single_para($1, $2); }
+    RetType T_Identifier    { $$ = t_single_para($1, $2); }
 |   _Args ',' RetType T_Identifier
-                            { t_append_para($1, $3, $4); }
+                            { $$ = t_append_para($1, $3, $4); }
 ;
 
 /*<vardecls>*/

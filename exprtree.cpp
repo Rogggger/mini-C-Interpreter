@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "exprtree.h"
+extern void yyerror(const char *);
 
 using namespace std;
 bool float_eq(double id, double num)
@@ -77,7 +78,8 @@ ExprRet Expr_plus::execute(vector<EXPR_DATA>& v)
     }
     else
     {
-        throw(string("string can not be plused"));
+        yyerror("string can not be used in addition\n");
+        return ExprRet();
     }
 }
 
@@ -103,7 +105,8 @@ Expr_sub::Expr_sub(Expression* e1, Expression* e2)
     }
     else
     {
-        throw(string("string can not be subed"));
+        yyerror("string can not be used in subtraction\n");
+        return ExprRet();
     }
 }
 
@@ -129,7 +132,8 @@ Expr_mul::Expr_mul(Expression* e1, Expression* e2)
     }
     else
     {
-        throw(string("string can not be mul"));
+        yyerror("string can not be multiplied\n");
+        return ExprRet();
     }
 }
 
@@ -149,7 +153,8 @@ Expr_div::Expr_div(Expression* e1, Expression* e2)
     {
         if ((int)num2.num==0)
         {
-            throw(string("divided by zero"));
+            yyerror("divided by zero");
+            return ExprRet();
         }
         else 
             return ExprRet((int)num1.num / (int)num2.num, "", 258);
@@ -158,14 +163,16 @@ Expr_div::Expr_div(Expression* e1, Expression* e2)
     {
         if (float_eq(num2.num,0))
         {
-            throw(string("divided by zero"));
+            yyerror("divided by zero");
+            return ExprRet();
         }
         else 
             return ExprRet(num1.num / num2.num, "", 259);
     }
     else
     {
-        throw(string("string can not be divided"));
+        yyerror("string can not be divided");
+        return ExprRet();
     }
 }
 
@@ -184,14 +191,16 @@ Expr_mod::Expr_mod(Expression* e1, Expression* e2)
     {
         if ((int)num2.num == 0)
         {
-            throw(string("divided by zero"));
+            yyerror("moded by zero");
+            return ExprRet();
         }
         else
             return ExprRet((int)num1.num % (int)num2.num, "", 258);
     }
     else
     {
-        throw(string("Only an integer can take the remainder"));
+        yyerror("Only an integer can take the remainder");
+        return ExprRet();
     }
 }
 
@@ -209,17 +218,33 @@ Expr_assign::Expr_assign(string* name, Expression* e)
     ExprRet ace = m_e->execute(v);
     int pos, type;
     pos = getType(v, m_name, type);
+    
     if (ace.type == 258)
     {
-        SetValue(v, m_name, pos, ace.num);
+        if (pos == -1) {
+            cout<<"Warning: try to assign a undeclared variable \"" + *m_name << " \", it\'ll be regard as a INT\n";
+        }
+        SetValue(v, m_name, pos, (int)ace.num);
     }
     else if (ace.type == 259)
     {
+        if (pos == -1) {
+            cout<<"Warning: try to assign a undeclared variable \"" + *m_name << " \", it\'ll be regard as a INT\n";
+        }
         SetValue(v, m_name, pos, ace.num);
     }
     else if (ace.type == 260)
     {
-        SetValue(v, m_name, pos, &ace.str);
+        if (pos == -1) {
+            string msg = "Error: undeclared variable \"" + *m_name + "\" cannot be assigned by a string\n";
+            yyerror(msg.c_str());
+        }
+        else if (type == 258 || type == 259) {
+            string msg = "Error: a INT or REAL variable \"" + *m_name + "\" cannot be assigned by a string\n";
+            yyerror(msg.c_str());
+        }
+        string * temp = new string(ace.str);
+        SetValue(v, m_name, pos, temp);
     }
     return ace;
 }
@@ -270,7 +295,7 @@ Expr_out::Expr_out(Expression* _printTimes, string* _printHint, Expression* _pri
     }
     for (int i = 0; i < (int)times.num; i++)
     {
-        if(content.type==258)
+        if(content.type==258) 
             printf("%d", (int)content.num);
         else if (content.type == 259)
             printf("%lf", content.num);
@@ -294,7 +319,7 @@ Expr_in::Expr_in(string* _readHint, string* _identifier)
     }
     int _type;
     int pos = getType(v,identifier, _type);
-    if (_type == 258 || _type == 0)//int,Î´ÉùÃ÷
+    if (_type == 258 || _type == 0)//int,Å’Â¥â€¦Ë˜âˆšËœ
     {
         int tmp;
         scanf("%d", &tmp);
@@ -327,6 +352,9 @@ Expr_ID::Expr_ID(string* name)
         return ExprRet();
     int type;
     int pos = getType(v, m_name, type);
+    if (pos == -1) {
+        type = 258;
+    }
     if (type == 258)
     {
         int num = GetValue(v, m_name, pos);
@@ -364,7 +392,8 @@ Expr_if::Expr_if(Expression* con, Expression* et)
           ExprRet b = m_con->execute(v);
           if (b.type == 260)
           {
-              throw(string("string can not be a Value"));
+              yyerror("string can not be a Value");
+              return ExprRet();
           }
           if (float_eq(b.num,0))
               m_ef->execute(v);
@@ -375,7 +404,8 @@ Expr_if::Expr_if(Expression* con, Expression* et)
           ExprRet b = m_con->execute(v);
           if (b.type == 260)
           {
-              throw(string("string can not be a Value"));
+              yyerror("string can not be a Value");
+              return ExprRet();
           }
           if (!float_eq(b.num,0)) {
               m_et->execute(v);
@@ -401,7 +431,8 @@ Expr_less::Expr_less(Expression* e1, Expression* e2)
     ExprRet num2 = m_e2->execute(v);
     if (num1.type == 260 || num2.type == 260)
     {
-        throw(string("string can not be compared"));
+        yyerror("string can not be compared");
+        return ExprRet();
     }
     if (num1.num < num2.num)
     {
@@ -426,7 +457,8 @@ Expr_greateq::Expr_greateq(Expression* e1, Expression* e2)
     ExprRet num2 = m_e2->execute(v);
     if (num1.type == 260 || num2.type == 260)
     {
-        throw(string("string can not be compared"));
+        yyerror("string can not be compared");
+        return ExprRet();
     }
     if (num1.num >= num2.num)
     {
@@ -451,7 +483,8 @@ Expr_eq::Expr_eq(Expression* e1, Expression* e2)
     ExprRet num2 = m_e2->execute(v);
     if (num1.type == 260 || num2.type == 260)
     {
-        throw(string("string can not be compared"));
+        yyerror("string can not be compared");
+        return ExprRet();
     }
     if (float_eq(num1.num, num2.num))
     {
@@ -476,7 +509,8 @@ Expr_neq::Expr_neq(Expression* e1, Expression* e2)
     ExprRet num2 = m_e2->execute(v);
     if (num1.type == 260 || num2.type == 260)
     {
-        throw(string("string can not be compared"));
+        yyerror("string can not be compared");
+        return ExprRet();
     }
     if (!float_eq(num1.num, num2.num))
     {
@@ -500,7 +534,8 @@ Expr_or::Expr_or(Expression* e1, Expression* e2)
     ExprRet num2 = m_e2->execute(v);
     if (num1.type == 260 || num2.type == 260)
     {
-        throw(string("string can not be compared"));
+        yyerror("string can not be compared");
+        return ExprRet();
     }
     return ExprRet((int)num1.num || (int)num2.num, "", 258);
 }
@@ -520,7 +555,8 @@ Expr_and::Expr_and(Expression* e1, Expression* e2)
     ExprRet num2 = m_e2->execute(v);
     if (num1.type == 260 || num2.type == 260)
     {
-        throw(string("string can not be compared"));
+        yyerror("string can not be compared");
+        return ExprRet();
     }
     return ExprRet((int)num1.num && (int)num2.num, "", 258);
 }
@@ -537,7 +573,8 @@ Expr_neg::Expr_neg(Expression* e)
     ExprRet num = m_e->execute(v);
     if (num.type == 260)
     {
-        throw(string("string can not be a value"));
+        yyerror("string can not be a value");
+        return ExprRet();
     }
     return ExprRet(-num.num, "", num.type);
 }
@@ -553,7 +590,8 @@ Expr_not::Expr_not(Expression* e)
     ExprRet num = m_e->execute(v);
     if (num.type == 260)
     {
-        throw(string("string can not be a value"));
+        yyerror("string can not be a value");
+        return ExprRet();
     }
     return ExprRet(!(int)num.num, "", 258);
 }
@@ -572,7 +610,8 @@ Expr_while::Expr_while(Expression* con, Expression* e)
     ExprRet ace = m_con->execute( v);
     if (ace.type == 260)
     {
-        throw(string("string can not be a value"));
+        yyerror("string can not be a value");
+        return ExprRet();
     }
     while (!float_eq(ace.num, 0))
     {
