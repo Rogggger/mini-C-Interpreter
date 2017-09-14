@@ -98,7 +98,7 @@ STRING              (\042[^\042\n]*\042)
 string * handleEscapeCharacter(char * s)
 {
     string temp(s);
-    string *str = new string(temp.substr(1,yylval.str->length()-2));
+    string *str = new string(temp.substr(1,temp.length()-2));
     for (int i=0; i<str->size()-1; i++) 
     {
         if ((*str)[i] == '\\')

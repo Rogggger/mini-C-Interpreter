@@ -121,7 +121,7 @@ _Args:
 
 /*<vardecls>*/
 VarDecls:
-    /* empty */             { /* empty */ }
+/* empty */                 { $$ = NULL; }
 |   _VarDecls 		    	{ $$ = $1;}
 ;
 
