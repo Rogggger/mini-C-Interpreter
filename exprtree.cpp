@@ -1,3 +1,26 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  ` - `.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            佛祖保佑       永无BUG
+*/
+
 #include <stdio.h>
 #include <vector>
 #include <string>
@@ -367,8 +390,14 @@ Expr_out::Expr_out(Expression* _printTimes, string* _printHint, Expression* _pri
     }
     for (int i = 0; i < (int)times.num; i++)
     {
-        if(content.type==258) 
-            printf("%d", (int)content.num);
+		if (content.type == 258)
+		{
+			if ((int)content.num > 32767 || (int)content.num < -32768)
+			{
+				printf("warning: Beyond the range of values of int\n");
+			}
+			printf("%d", (int)content.num);
+		}
         else if (content.type == 259)
             printf("%lf", content.num);
         else if (content.type == 260)
@@ -383,7 +412,7 @@ Expr_in::Expr_in(string* _readHint, string* _identifier)
     readHint = _readHint;
     identifier = _identifier;
 }
- ExprRet Expr_in::excute(vector<EXPR_DATA>& v)
+ ExprRet Expr_in::execute(vector<EXPR_DATA>& v)
 {
     if (readHint)
     {
@@ -391,13 +420,13 @@ Expr_in::Expr_in(string* _readHint, string* _identifier)
     }
     int _type;
     int pos = getType(v,identifier, _type);
-    if (_type == 258 || _type == 0)//int,Œ¥…˘√˜
+    if (_type == 258 || _type == 0)//int,
     {
         int tmp;
         scanf("%d", &tmp);
         SetValue(v,identifier, pos, tmp);
     }
-    else if (_type == 259)//real
+    else if (_type == 259)//real	
     {
         double tmp;
         scanf("%lf", &tmp);
@@ -696,13 +725,63 @@ Expr_while::Expr_while(Expression* con, Expression* e)
 
     return ExprRet();
 }
+ Expr_dountil::Expr_dountil(Expression* e,Expression* con)
+ {
+	 m_con = con;
+	 m_e = e;
+ }
+ ExprRet Expr_dountil::execute(vector<EXPR_DATA>& v)
+ {
+	 if (!m_con || !m_e)
+		 return ExprRet();
 
+	 ExprRet ace = m_con->execute(v);
+	 if (ace.type == 260)
+	 {
+		 yyerror("string can not be a value");
+		 return ExprRet();
+	 }
+	 do
+	 {
+		 m_e->execute(v);
+		 ace = m_con->execute(v);
+	 } while (float_eq(ace.num, 0));
+	 return ExprRet();
+ }
+Expr_break::Expr_break()
+{
+    ;
+}
+ExprRet Expr_break::execute(vector<EXPR_DATA>& v)
+{
+    return ExprRet();
+}
+Expr_continue::Expr_continue()
+{
+    ;
+}
+ExprRet Expr_continue::execute(vector<EXPR_DATA>& v)
+{
+    return ExprRet();
+}
+Expr_return::Expr_return()
+{
+    ;
+}
+Expr_return::Expr_return(Expression* expr)
+{
+    this->m_e = expr;
+}
+ExprRet Expr_return::execute(vector<EXPR_DATA>& v)
+{
+    return ExprRet();
+}
 Expr_block::Expr_block(Expressions* exprs)
 {
     m_exprs = exprs;
 }
 
- ExprRet Expr_block::execute(vector<EXPR_DATA>& v)
+ExprRet Expr_block::execute(vector<EXPR_DATA>& v)
 {
     if (!m_exprs)
         return ExprRet();
@@ -817,7 +896,22 @@ Expression* t_while(Expression* con, Expression* e)
 {
   return new Expr_while(con, e);
 }
-
+Expression* t_dountil(Expression* con, Expression* e)
+{
+	return new Expr_dountil(con, e);
+}
+Expression* t_break()
+{
+    return new Expr_break();
+}
+Expression* t_continue()
+{
+    return new Expr_continue();
+}
+Expression* t_return(Expression* con)
+{
+    return new Expr_return(con);
+}
 Expression* t_block(Expressions* exprs)
 {
   return new Expr_block(exprs);

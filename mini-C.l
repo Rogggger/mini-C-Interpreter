@@ -10,9 +10,6 @@
 #define T_If 263
 #define T_Else 264
 #define T_While 265
-//#define T_Return 266
-//#define T_Break 267
-//#define T_Continue 268
 #define T_And 266
 #define T_Or 267
 #define T_Le 268
@@ -23,6 +20,12 @@
 #define T_RealConstant 273
 #define T_StringConstant 274
 #define T_Identifier 275
+#define T_Return 276
+#define T_Break 277
+#define T_Continue 278
+#define T_Do 279
+#define T_Until 280
+
 using namespace std;
 int cur_line = 1;
 void yyerror(const char *msg);
@@ -69,6 +72,8 @@ STRING              (\042[^\042\n]*\042)
 "string"			{ return T_String; }
 "out"               { return T_Print; }
 "in"                { return T_Read; }
+"do"                { return T_Do; }
+"until"             { return T_Until; }
 "while"             { return T_While; }
 "if"                { return T_If; }
 "else"              { return T_Else; }
@@ -98,6 +103,11 @@ STRING              (\042[^\042\n]*\042)
 string * handleEscapeCharacter(char * s)
 {
     string temp(s);
+    if (temp == "\"\"")
+    {
+        string *str = new string("");
+        return str;
+    }
     string *str = new string(temp.substr(1,temp.length()-2));
     for (int i=0; i<str->size()-1; i++) 
     {
@@ -145,7 +155,7 @@ string * handleEscapeCharacter(char * s)
                     (*str)[i] = '\"'; //replace the character
                     str->erase(str->begin()+i+1);//erase No i+1
                     break;
-                case 0:
+                case '0':
                     (*str)[i] = '\0'; //replace the character
                     str->erase(str->begin()+i+1);//erase No i+1
                     break;
