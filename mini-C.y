@@ -11,6 +11,9 @@ extern void yyerror(const char *);
 extern int yylex (void);
 vector<EXPR_DATA> global_var;
 vector<Function*>global_functions;
+int global_return_flag = 0;
+ExprRet global_return_value;
+
 %}
 
 %union{
@@ -245,7 +248,6 @@ _Actuals:
 /*<expression>*/
 ReturnStmt:
     T_Return Expr ';'       { $$ = t_return($2); }
-|   T_Return ';'            { $$ = t_return(NULL); }
 ;
 
 /*<expression>*/
@@ -313,20 +315,4 @@ Expr:
 
 %%
 
-int main() {
-    //yydebug = 1;
-    if(yyparse() == 0)
-    {
-        for (int i=0; i<global_functions.size(); i++)
-        {
-            if (global_functions[i]->funcName == "main")
-            {
-                int size = global_functions[i]->para->args.size();
-                ExprRet * b = new ExprRet[size];
-                global_functions[i]->initialize(b, size);
-                global_functions[i]->execute();
-            }
-        }
-    }
-    return 0;
-}
+

@@ -1,5 +1,6 @@
 %{
 #include <string>
+#include <sstream>
 #include "functions.h"
 
 #define T_Int 258
@@ -32,6 +33,13 @@ void yyerror(const char *msg);
 void unrecognized_char(char c);
 void unterminate_string();
 string * handleEscapeCharacter(char * s);
+typedef struct yy_buffer_state * YY_BUFFER_STATE;
+stringstream is;
+extern int yyparse();
+extern void yy_delete_buffer(YY_BUFFER_STATE buffer);extern vector<EXPR_DATA> global_var;
+extern vector<Function*>global_functions;
+extern int global_return_flag;
+extern ExprRet global_return_value;
 typedef union YYSTYPE
  {
     Expressions* expressions;
@@ -75,12 +83,13 @@ STRING              (\042[^\042\n]*\042)
 "do"                { return T_Do; }
 "until"             { return T_Until; }
 "while"             { return T_While; }
+"return"            { return T_Return; }
 "if"                { return T_If; }
 "else"              { return T_Else; }
 "<="                { return T_Le; }
 ">="                { return T_Ge; }
 "=="                { return T_Eq; }
-"!="                { return T_Ne; }
+"<>"                { return T_Ne; }
 "&&"                { return T_And; }
 "||"                { return T_Or; }
 
@@ -185,4 +194,26 @@ void yyerror(const char *msg) {
     fprintf(stderr, "Error at line %d:\n\t%s\n", cur_line, msg);
 	system("pause");
     exit(-1);
+}
+
+int main(int argc, char ** argv) {
+    //yydebug = 1;
+    //char * str = "int main() { int a; in a; out a; }";
+    is<<argv[2];
+    YY_BUFFER_STATE buffer = yy_scan_string(argv[1]);
+    if(yyparse() == 0)
+    {
+        for (int i=0; i<global_functions.size(); i++)
+        {
+            if (global_functions[i]->funcName == "main")
+            {
+                int size = global_functions[i]->para->args.size();
+                ExprRet * b = new ExprRet[size];
+                global_functions[i]->initialize(b, size);
+                global_functions[i]->execute();
+                break;
+            }
+        }
+    }
+    yy_delete_buffer(buffer);
 }

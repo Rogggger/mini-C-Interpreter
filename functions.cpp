@@ -9,6 +9,8 @@ extern vector<EXPR_DATA> global_var;
 extern int getType(vector<EXPR_DATA>&, string*, int&);
 extern vector<Function*> global_functions;
 extern void yyerror(const char *);
+extern int global_return_flag;
+extern ExprRet global_return_value;
 
 Parameters::Parameters()
 {
@@ -107,7 +109,23 @@ ExprRet Function::execute()
 {
     if (varDecs && varDecs->decls.size())
         varDecs->execute(vars);
-    return Stmts->execute(vars);
+    Stmts->execute(vars);
+    /* Release the ram */
+    if (varDecs && varDecs->decls.size()) {
+        int cnt = 0;
+        for (int i=0; i<varDecs->decls.size(); i++) {
+            if (varDecs->decls[i]->decl.size()) {
+                cnt += varDecs->decls[i]->decl.size();
+            }
+        }
+        while (cnt--) {
+            vars.pop_back();
+        }
+    }
+    if (global_return_flag)
+        global_return_flag = 0;
+    /* release over */
+    return global_return_value;
 }
 void Function::initialize(ExprRet* a, const int & length)
 {
@@ -149,6 +167,9 @@ Expr_call::Expr_call(string* id, Actuals* act)
         if (global_functions[i]->funcName == *identifier)
         {
             int flag = 0;
+            if (global_functions[i]->para->args.size() != actuals->actus.size()) {
+                continue;
+            }
             for (int j=0; j<actuals->actus.size(); j++)
             {
                 /*  parameters type == Actuals' value */
@@ -167,6 +188,8 @@ Expr_call::Expr_call(string* id, Actuals* act)
             {
                 global_functions[i]->initialize(a, actuals->actus.size());
                 ret = global_functions[i]->execute();
+                for (int j=0; j<actuals->actus.size(); j++)
+                    global_functions[i]->vars.pop_back();
                 break;
             }
         }

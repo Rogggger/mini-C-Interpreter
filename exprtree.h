@@ -301,7 +301,6 @@ protected:
 class Expr_return : public Expression
 {
 public:
-    Expr_return();
     Expr_return(Expression* e);
     virtual ExprRet execute(vector<EXPR_DATA>& v);
     

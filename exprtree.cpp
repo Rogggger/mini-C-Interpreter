@@ -24,13 +24,16 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <math.h>
 #include "exprtree.h"
 using namespace std;
 
 extern void yyerror(const char *);
-
+extern int global_return_flag;
+extern ExprRet global_return_value;
+extern stringstream is;
 using namespace std;
 bool float_eq(double id, double num)
 {
@@ -76,6 +79,9 @@ ExprRet Expressions::execute(vector<EXPR_DATA>& v)
 {
     for (int i = 0; i < m_vExpr.size(); i++)
     {
+        if (global_return_flag) {
+            return ExprRet();
+        }
         if (m_vExpr[i])
             m_vExpr[i]->execute(v);
     }
@@ -90,6 +96,9 @@ Expr_plus::Expr_plus(Expression* e1, Expression* e2)
 }
 ExprRet Expr_plus::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
     ExprRet num1 = m_e1->execute(v);
@@ -117,6 +126,9 @@ Expr_sub::Expr_sub(Expression* e1, Expression* e2)
 }
  ExprRet Expr_sub::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
     ExprRet num1 = m_e1->execute(v);
@@ -144,6 +156,9 @@ Expr_mul::Expr_mul(Expression* e1, Expression* e2)
 }
  ExprRet Expr_mul::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
     ExprRet num1 = m_e1->execute(v);
@@ -171,6 +186,9 @@ Expr_div::Expr_div(Expression* e1, Expression* e2)
 }
  ExprRet Expr_div::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
     ExprRet num1 = m_e1->execute(v);
@@ -209,6 +227,9 @@ Expr_mod::Expr_mod(Expression* e1, Expression* e2)
 }
 ExprRet Expr_mod::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
     ExprRet num1 = m_e1->execute(v);
@@ -236,6 +257,9 @@ Expr_pow::Expr_pow(Expression* e1, Expression* e2)
 }
 ExprRet Expr_pow::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
 	if (!m_e1 || !m_e2)
 		return ExprRet();
 	ExprRet num1 = m_e1->execute(v);
@@ -266,6 +290,9 @@ Expr_splus::Expr_splus(Expression* e1, Expression* e2)
 }
 ExprRet Expr_splus::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
 	if (!m_e1 || !m_e2)
 		return ExprRet();
 	ExprRet num1 = m_e1->execute(v);
@@ -286,6 +313,9 @@ Expr_ssub::Expr_ssub(Expression* e1)
 }
 ExprRet Expr_ssub::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
 	if (!m_e1)
 		return ExprRet();
 	ExprRet num1 = m_e1->execute(v);
@@ -308,6 +338,9 @@ Expr_assign::Expr_assign(string* name, Expression* e)
 }
  ExprRet Expr_assign::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_name || !m_e)
         return ExprRet();
     ExprRet ace = m_e->execute(v);
@@ -351,6 +384,9 @@ Expr_num_double::Expr_num_double(double num)
 }
  ExprRet Expr_num_double::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     return ExprRet(m_num, "", 259);
 }
 
@@ -360,6 +396,9 @@ Expr_num_int::Expr_num_int(int num)
 }
  ExprRet Expr_num_int::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     return ExprRet(m_num, "", 258);
 }
 
@@ -370,6 +409,9 @@ Expr_num_string::Expr_num_string(string* num)
 }
  ExprRet Expr_num_string::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     return ExprRet(0,m_num, 260);
 }
 
@@ -382,6 +424,9 @@ Expr_out::Expr_out(Expression* _printTimes, string* _printHint, Expression* _pri
 }
  ExprRet Expr_out::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     ExprRet times = printTimes->execute(v);
     ExprRet content = printContent->execute(v);
     if (printHint)
@@ -414,6 +459,9 @@ Expr_in::Expr_in(string* _readHint, string* _identifier)
 }
  ExprRet Expr_in::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (readHint)
     {
         printf("%s", readHint->c_str());
@@ -423,19 +471,21 @@ Expr_in::Expr_in(string* _readHint, string* _identifier)
     if (_type == 258 || _type == 0)//int,
     {
         int tmp;
-        scanf("%d", &tmp);
+        is >> tmp;
         SetValue(v,identifier, pos, tmp);
     }
     else if (_type == 259)//real	
     {
         double tmp;
-        scanf("%lf", &tmp);
+        is >> tmp;
         SetValue(v,identifier, pos, tmp);
     }
     else if (_type == 260)//string
     {
         string* tmp = new string;
-        cin >> *tmp;
+        //cout<<"before\n";
+        is >> *tmp;
+        //cout << "end\n";
         SetValue(v,identifier, pos, tmp);
     }
     return ExprRet();
@@ -449,6 +499,9 @@ Expr_ID::Expr_ID(string* name)
 }
  ExprRet Expr_ID::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_name)
         return ExprRet();
     int type;
@@ -488,6 +541,9 @@ Expr_if::Expr_if(Expression* con, Expression* et)
 }
  ExprRet Expr_if::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_con || !m_et) {
         return ExprRet();
     }
@@ -528,6 +584,9 @@ Expr_less::Expr_less(Expression* e1, Expression* e2)
 
  ExprRet Expr_less::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
 
@@ -555,6 +614,9 @@ Expr_greateq::Expr_greateq(Expression* e1, Expression* e2)
 
  ExprRet Expr_greateq::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
     ExprRet num1 = m_e1->execute(v);
@@ -580,6 +642,9 @@ Expr_eq::Expr_eq(Expression* e1, Expression* e2)
   
  ExprRet Expr_eq::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
       
@@ -606,6 +671,9 @@ Expr_neq::Expr_neq(Expression* e1, Expression* e2)
 
  ExprRet Expr_neq::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
 
@@ -631,6 +699,9 @@ Expr_or::Expr_or(Expression* e1, Expression* e2)
 
  ExprRet Expr_or::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
 
@@ -652,6 +723,9 @@ Expr_and::Expr_and(Expression* e1, Expression* e2)
 
  ExprRet Expr_and::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e1 || !m_e2)
         return ExprRet();
 
@@ -672,6 +746,9 @@ Expr_neg::Expr_neg(Expression* e)
 
  ExprRet Expr_neg::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e)
         return ExprRet();
     ExprRet num = m_e->execute(v);
@@ -689,6 +766,9 @@ Expr_not::Expr_not(Expression* e)
 }
  ExprRet Expr_not::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_e)
         return ExprRet();
     ExprRet num = m_e->execute(v);
@@ -708,6 +788,9 @@ Expr_while::Expr_while(Expression* con, Expression* e)
 
  ExprRet Expr_while::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_con || !m_e)
       return ExprRet();
 
@@ -732,6 +815,9 @@ Expr_while::Expr_while(Expression* con, Expression* e)
  }
  ExprRet Expr_dountil::execute(vector<EXPR_DATA>& v)
  {
+     if (global_return_flag) {
+         return ExprRet();
+     }
 	 if (!m_con || !m_e)
 		 return ExprRet();
 
@@ -754,6 +840,9 @@ Expr_break::Expr_break()
 }
 ExprRet Expr_break::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     return ExprRet();
 }
 Expr_continue::Expr_continue()
@@ -762,18 +851,23 @@ Expr_continue::Expr_continue()
 }
 ExprRet Expr_continue::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     return ExprRet();
 }
-Expr_return::Expr_return()
-{
-    ;
-}
+
 Expr_return::Expr_return(Expression* expr)
 {
     this->m_e = expr;
 }
 ExprRet Expr_return::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
+    global_return_value = this->m_e->execute(v);
+    global_return_flag = 1;
     return ExprRet();
 }
 Expr_block::Expr_block(Expressions* exprs)
@@ -783,6 +877,9 @@ Expr_block::Expr_block(Expressions* exprs)
 
 ExprRet Expr_block::execute(vector<EXPR_DATA>& v)
 {
+    if (global_return_flag) {
+        return ExprRet();
+    }
     if (!m_exprs)
         return ExprRet();
     return m_exprs->execute(v);
