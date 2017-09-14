@@ -150,7 +150,7 @@ string * handleEscapeCharacter(char * s)
                     (*str)[i] = '\"'; //replace the character
                     str->erase(str->begin()+i+1);//erase No i+1
                     break;
-                case 0:
+                case '0':
                     (*str)[i] = '\0'; //replace the character
                     str->erase(str->begin()+i+1);//erase No i+1
                     break;
