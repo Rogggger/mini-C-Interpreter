@@ -696,7 +696,29 @@ Expr_while::Expr_while(Expression* con, Expression* e)
 
     return ExprRet();
 }
+ Expr_doWhile::Expr_doWhile(Expression* con, Expression* e)
+ {
+	 m_con = con;
+	 m_e = e;
+ }
+ ExprRet Expr_doWhile::execute(vector<EXPR_DATA>& v)
+ {
+	 if (!m_con || !m_e)
+		 return ExprRet();
 
+	 ExprRet ace = m_con->execute(v);
+	 if (ace.type == 260)
+	 {
+		 yyerror("string can not be a value");
+		 return ExprRet();
+	 }
+	 do
+	 {
+		 m_e->execute(v);
+		 ace = m_con->execute(v);
+	 }
+	 return ExprRet();
+ }
 Expr_block::Expr_block(Expressions* exprs)
 {
     m_exprs = exprs;
@@ -817,7 +839,10 @@ Expression* t_while(Expression* con, Expression* e)
 {
   return new Expr_while(con, e);
 }
-
+Expression* t_doWhile(Expression* con, Expression* e)
+{
+	return new Expr_while(con, e);
+}
 Expression* t_block(Expressions* exprs)
 {
   return new Expr_block(exprs);

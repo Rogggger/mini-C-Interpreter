@@ -271,7 +271,16 @@ protected:
     Expression* m_con;
     Expression* m_e;
 };
+class Expr_doWhile : public Expression
+{
+public:
+	Expr_doWhile(Expression* con, Expression* e);
+	virtual ExprRet execute(vector<EXPR_DATA>& v);
 
+protected:
+	Expression* m_con;
+	Expression* m_e;
+};
 class Expr_block : public Expression
 {
 public:
@@ -318,7 +327,7 @@ Expression* t_if(Expression* con, Expression* et, Expression* ef);
 Expression* t_if(Expression* con, Expression* et);
 
 Expression* t_while(Expression* con, Expression* expr);
-
+Expression* t_doWhile(Expression* con, Expression* expr);
 Expression* t_break();
 Expression* t_continue();
 
