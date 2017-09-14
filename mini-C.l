@@ -178,5 +178,6 @@ void unterminate_string() {
 
 void yyerror(const char *msg) {
     fprintf(stderr, "Error at line %d:\n\t%s\n", cur_line, msg);
+	system("pause");
     exit(-1);
 }

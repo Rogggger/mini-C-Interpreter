@@ -179,7 +179,7 @@ Expr_div::Expr_div(Expression* e1, Expression* e2)
     {
         if ((int)num2.num==0)
         {
-            yyerror("divided by zero");
+            yyerror("divided by zero\n");
             return ExprRet();
         }
         else 

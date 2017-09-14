@@ -300,6 +300,7 @@ Expr:
 |   Expr T_Or Expr          { $$ = t_or($1, $3); }
 |   Expr T_And Expr         { $$ = t_and($1, $3); }
 |   '-' Expr %prec '!'      { $$ = t_neg($2); }
+|   '+' Expr %prec '!'		{ $$ = $2;}
 |   '!' Expr                { $$ = t_not($2); }
 |   T_IntConstant           { $$ = t_num_int($1); }
 |   T_RealConstant          { $$ = t_num_double($1); }
@@ -313,7 +314,7 @@ Expr:
 %%
 
 int main() {
-    yydebug = 1;
+    //yydebug = 1;
     if(yyparse() == 0)
     {
         for (int i=0; i<global_functions.size(); i++)
