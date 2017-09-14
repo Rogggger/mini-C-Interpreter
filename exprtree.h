@@ -77,6 +77,33 @@ protected:
     Expression* m_e1;
     Expression* m_e2;
 };
+class Expr_pow : public Expression
+{
+public :
+	Expr_pow(Expression* e1, Expression* e2);
+	virtual ExprRet execute(vector<EXPR_DATA>& v);
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
+class Expr_splus:public Expression
+{
+public:
+	Expr_splus(Expression* e1, Expression* e2);
+	virtual ExprRet execute(vector<EXPR_DATA>& v);
+protected:
+	Expression* m_e1;
+	Expression* m_e2;
+};
+class Expr_ssub :public Expression
+{
+public:
+	Expr_ssub(Expression* e1);
+	virtual ExprRet execute(vector<EXPR_DATA>& v);
+protected:
+	Expression* m_e1;
+};
+
 class Expr_assign : public Expression
 {
 public:
@@ -273,6 +300,9 @@ Expression* t_sub(Expression* e1, Expression* e2);
 Expression* t_mul(Expression* e1, Expression* e2);
 Expression* t_div(Expression* e1, Expression* e2);
 Expression* t_mod(Expression* e1, Expression* e2);
+Expression* t_pow(Expression* e1, Expression* e2);
+Expression* t_splus(Expression* e1, Expression* e2);
+Expression* t_ssub(Expression* e1);
 Expression* t_neg(Expression* e1);
 
 Expression* t_less(Expression* e1, Expression* e2);

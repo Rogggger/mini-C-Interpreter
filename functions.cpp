@@ -151,39 +151,40 @@ Expr_call::Expr_call(string* id, Actuals* act)
 }
  ExprRet Expr_call::execute(vector<EXPR_DATA>& v)
 {
-    ExprRet *a[] = new ExprRet[actuals->actus.size()];
-    for (int i=0; i<actuals->actus.size(); i++) {
-        (*a)[i] = actuals->actus[i]->execute(v);
-    }
-    for (int i = 0; i < global_functions.size(); ++i)
-    {
-        if (global_functions[i]->funcName == *identifier)
-        {
-            int flag = 0;
-            for (int j=0; j<actuals->actus.size(); j++)
-            {
-                /*  parameters type == Actuals' value */
-                ExprRet a = actuals->actus[j]->execute(v);
-                if (global_functions[i]->para->args[j].first
-                    != a.type)
-                {
-                    flag = 1;
-                    break;
-                }
-            }
-            if (flag)
-            {
-                continue;
-            }
-            else
-            {
-                global_functions[i]->initialize(actuals);
-                a = global_functions[i]->execute();
-                break;
-            }
-        }
-    }
-    return a;
+	 ExprRet *a = new ExprRet[actuals->actus.size()];
+	 ExprRet ret;
+	 for (int i = 0; i<actuals->actus.size(); i++) {
+		 a[i] = actuals->actus[i]->execute(v);
+	 }
+	 for (int i = 0; i < global_functions.size(); ++i)
+	 {
+		 if (global_functions[i]->funcName == *identifier)
+		 {
+			 int flag = 0;
+			 for (int j = 0; j<actuals->actus.size(); j++)
+			 {
+				 /*  parameters type == Actuals' value */
+				 if (global_functions[i]->para->args[j].first
+					 != a[j].type)
+				 {
+					 flag = 1;
+					 break;
+				 }
+			 }
+			 if (flag)
+			 {
+				 continue;
+			 }
+			 else
+			 {
+				 global_functions[i]->initialize(actuals);
+				 ret = global_functions[i]->execute();
+				 break;
+			 }
+		 }
+	 }
+	 return ret;
+
 }
 
 Function* t_func(int retType, string* funcName, Parameters* args, VarDecls* varDec, Expressions* stmts)

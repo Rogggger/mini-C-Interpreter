@@ -50,7 +50,7 @@ typedef union YYSTYPE
 /* note \042 is '"' */
 WHITESPACE          ([ \t\r\a]+)
 SINGLE_COMMENT1     ("//"[^\n]*)
-OPERATOR            ([+*-/%=,;!<>(){}])
+OPERATOR            ([+*-/%^$#=,;!<>(){}])
 INTEGER             ([0-9]+)
 REAL                ([0-9]+\.[0-9]*)
 IDENTIFIER          ([_a-zA-Z][_a-zA-Z0-9]*)
