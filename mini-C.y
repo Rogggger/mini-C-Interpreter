@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <string>
+#include <sstream>
 #include "symtab.h"
 #include "exprtree.h"
 #include "functions.h"
@@ -206,9 +207,9 @@ PrintContent:
 /*<expression>*/
 ReadStmt:
 /*  token      <str>            token */
-    T_Read T_StringConstant T_Identifier ';' 
+    T_Read T_StringConstant ',' T_Identifier ';'
     						{ 
-    							$$ = t_in($2, $3);
+    							$$ = t_in($2, $4);
     						}
 /*  token       token */
 |   T_Read T_Identifier ';'                  
@@ -319,6 +320,9 @@ int main() {
         {
             if (global_functions[i]->funcName == "main")
             {
+                int size = global_functions[i]->para->args.size();
+                ExprRet * b = new ExprRet[size];
+                global_functions[i]->initialize(b, size);
                 global_functions[i]->execute();
             }
         }
