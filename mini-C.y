@@ -312,7 +312,7 @@ Expr:
 %%
 
 int main() {
-    //yydebug = 1;
+    yydebug = 1;
     if(yyparse() == 0)
     {
         for (int i=0; i<global_functions.size(); i++)

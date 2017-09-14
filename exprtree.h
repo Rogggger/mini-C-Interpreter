@@ -155,7 +155,7 @@ class Expr_in :public Expression
 {
 public:
     Expr_in(string* _readHint, string* _identifier);
-    virtual ExprRet excute(vector<EXPR_DATA>& v);
+    virtual ExprRet execute(vector<EXPR_DATA>& v);
 protected:
     string* readHint;
     string* identifier;
